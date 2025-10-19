@@ -36,7 +36,7 @@ public class CameraController : MonoBehaviour
 
         // Kamera pozisyonunu ayarla
         distanceFromPlayer -= mouseWhell;
-        distanceFromPlayer = Mathf.Clamp(distanceFromPlayer, 2f, 15f); // Mesafeyi sınırla
+        distanceFromPlayer = Mathf.Clamp(distanceFromPlayer, 3f, 15f); // Mesafeyi sınırla
         Vector3 desiredPosition = Vector3.Lerp(transform.position, player.position - transform.forward * distanceFromPlayer, Time.deltaTime * 10f * lerpSens);
         RaycastHit hit;
     
