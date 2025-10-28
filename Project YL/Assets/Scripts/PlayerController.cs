@@ -12,8 +12,7 @@ public class PlayerController : MonoBehaviour
     [Header("Player Movement Settings")]
     [Range(0, 20f)][SerializeField] private float moveSpeed = 5f;
     [SerializeField, Range(1f, 200f)] private float acceleration = 50f;
-    [Range(0, 100f)][SerializeField] private float jumpForce = 5f;
-    private Vector2 moveInput;
+    [Range(0, 100f)][SerializeField] private float jumpForce = 5f;    private Vector2 moveInput;
     private bool isGrounded = true;
 
     [Header("Ground Tags")]
