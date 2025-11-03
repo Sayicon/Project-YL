@@ -1,55 +1,89 @@
+// Dosya Yolu: Assets/Scripts/CameraController.cs
 using UnityEngine;
+using UnityEngine.InputSystem; 
 
 public class CameraController : MonoBehaviour
 {
-    public Transform player; // Player'ın referansı
+    public Transform player; 
     [SerializeField][Range(0, 10f)] private float sensitivityX = 1f;
     [SerializeField][Range(0, 10f)] private float sensitivityY = 1f; 
 
     [Range(0, 10f)] public float lerpSens = 2f;
     [Range(0, 10f)] public float mouseWhellSens = 1f;
-    [Range(0, 100f)] public float distanceFromPlayer = 5f; // Kamera ile oyuncu arasındaki mesafe
-    public Vector2 verticalClamp = new Vector2(-40f, 80f); // Dikey eksen sınırları
+    [Range(0, 100f)] public float distanceFromPlayer = 5f; 
+    public Vector2 verticalClamp = new Vector2(-40f, 80f); 
 
-    private float pitch = 0f; // Dikey eksen (X) dönüşü
-    private float yaw = 0f;   // Yatay eksen (Y) dönüşü
+    private float pitch = 0f; 
+    private float yaw = 0f;   
+
+    private Vector2 lookInput;
+    private float zoomInput;
+
+    // YENİ: Kameranın çarpışacağı katmanları seçin
+    [Header("Camera Collision")]
+    [SerializeField] private LayerMask collisionLayers; // Çarpışma katmanları
+    [SerializeField][Range(0.01f, 1f)] private float collisionOffset = 0.2f; // Kameranın duvardan ne kadar uzakta duracağı
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked; // Fareyi kilitle
+        Cursor.lockState = CursorLockMode.Locked; 
     }
 
+    // --- INPUT METOTLARI (Aynı) ---
+    public void OnLook(InputAction.CallbackContext context)
+    {
+        lookInput = context.ReadValue<Vector2>();
+    }
+
+    public void OnZoom(InputAction.CallbackContext context)
+    {
+        zoomInput = context.ReadValue<Vector2>().y;
+    }
+
+    // --- GÜNCELLENMİŞ LATEUPDATE ---
     void LateUpdate()
     {
-        // Fare hareketlerini al
-        float mouseX = Input.GetAxis("Mouse X") * sensitivityX * 100f * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * sensitivityY * 100f * Time.deltaTime;
-        float mouseWhell = Input.GetAxis("Mouse ScrollWheel") * mouseWhellSens * 100f * Time.deltaTime;
+        // 1. INPUT (Aynı)
+        float mouseX = lookInput.x * sensitivityX * 100f * Time.deltaTime;
+        float mouseY = lookInput.y * sensitivityY * 100f * Time.deltaTime;
+        float mouseWhell = zoomInput * mouseWhellSens * 100f * Time.deltaTime;
     
-        // Yatay ve dikey dönüşleri hesapla
+        // 2. ROTATION (Aynı)
         yaw += mouseX;
         pitch -= mouseY;
-        pitch = Mathf.Clamp(pitch, verticalClamp.x, verticalClamp.y); // Dikey ekseni sınırla
-
-        // Kameranın dönüşünü ayarla
+        pitch = Mathf.Clamp(pitch, verticalClamp.x, verticalClamp.y); 
         transform.rotation = Quaternion.Euler(pitch, yaw, 0f);
 
-        // Kamera pozisyonunu ayarla
+        // 3. ZOOM (Aynı)
         distanceFromPlayer -= mouseWhell;
-        distanceFromPlayer = Mathf.Clamp(distanceFromPlayer, 2f, 15f); // Mesafeyi sınırla
-        Vector3 desiredPosition = Vector3.Lerp(transform.position, player.position - transform.forward * distanceFromPlayer, Time.deltaTime * 10f * lerpSens);
+        distanceFromPlayer = Mathf.Clamp(distanceFromPlayer, 2f, 15f); 
+        
+        // 4. POSITION & COLLISION (GÜNCELLENDİ)
+        
+        // Nereye bakacağımızı tanımla (oyuncunun biraz üzeri)
+        Vector3 lookAtPoint = player.position + Vector3.up * 1.5f;
+
+        // Kameranın olmasını istediğimiz ideal nokta (pivot noktasının arkası)
+        Vector3 desiredPosition = lookAtPoint - (transform.forward * distanceFromPlayer);
+        
         RaycastHit hit;
-    
-        if (Physics.Raycast(player.position, desiredPosition - player.position, out hit, distanceFromPlayer))
+        
+        // GÜNCELLENMİŞ KONTROL: Linecast
+        // Bakış noktasından (A) ideal kamera noktasına (B) bir çizgi çek.
+        // SADECE "collisionLayers" içindeki nesneleri kontrol et (Player'ı DEĞİL).
+        if (Physics.Linecast(lookAtPoint, desiredPosition, out hit, collisionLayers))
         {
-            transform.position = hit.point; // Çarpışma noktasına yerleştir
+            // Bir duvara çarparsa, kamerayı çarpma noktasının biraz gerisine (normal yönünde) yerleştir.
+            transform.position = hit.point + (hit.normal * collisionOffset);
         }
         else
         {
-            transform.position = desiredPosition; // Normal pozisyona yerleştir
+            // Arada bir şey yoksa, ideal pozisyona geç.
+            transform.position = desiredPosition; 
         }
     
-        // Kamerayı oyuncuya çevir
-        transform.LookAt(player.position + Vector3.up * 1.5f); // Oyuncunun biraz yukarısına bak
+        // 5. LOOK AT (GÜNCELLENDİ)
+        // Kameranın her zaman pivot noktasına bakmasını sağla
+        transform.LookAt(lookAtPoint); 
     }
 }
