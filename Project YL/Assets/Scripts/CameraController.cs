@@ -42,13 +42,20 @@ public class CameraController : MonoBehaviour
     
         if (Physics.Raycast(player.position, desiredPosition - player.position, out hit, distanceFromPlayer))
         {
-            transform.position = hit.point; // Çarpışma noktasına yerleştir
+            if (!hit.collider.CompareTag("Enemy"))
+            {
+                Vector3 safePos = hit.point - (desiredPosition - player.position).normalized * 0.2f;
+                transform.position = safePos;
+            }
+            else
+            {
+                transform.position = desiredPosition;
+            }
         }
         else
         {
-            transform.position = desiredPosition; // Normal pozisyona yerleştir
+            transform.position = desiredPosition;
         }
-    
         // Kamerayı oyuncuya çevir
         transform.LookAt(player.position + Vector3.up * 1.5f); // Oyuncunun biraz yukarısına bak
     }
