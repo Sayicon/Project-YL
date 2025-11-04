@@ -1,39 +1,32 @@
-// Dosya Yolu: Assets/Scripts/_States/HeroAnimStateController.cs
 using UnityEngine;
 
-namespace _States // <-- Hatanın çözümü için bu namespace çok önemli!
+namespace _States 
 {
-    // Animasyon durumlarını (State) yöneten ana kontrolcü
     public class HeroAnimStateController
     {
-        // ==> Components
-        private HeroAnimState _currentState; // Mevcut aktif state
+        private HeroAnimState _currentState; 
 
-        // Kontrolcü başladığında, başlangıç state'i olarak Idle'ı ata
         public HeroAnimStateController(Animator animator)
         {
-            // Başlangıçta IdleAnimState'i oluştur ve onu mevcut state yap
+            // Başlangıçta için idle kullanılıyor
             _currentState = new IdleAnimState(animator);
             _currentState.OnEnter();
         }
 
-        // ==> Main Functions
-        // Durumu (State) değiştirmek için bu metot kullanılır
+        // Durumu değiştirmek için bu metot kullanılıyor
         public void ChangeState(HeroAnimState newState)
         {
-            // Eğer yeni state zaten mevcut state ise, hiçbir şey yapma
+            // Eğer yeni state zaten mevcut state ise değişiklik olmuyor
             if (_currentState == newState)
                 return;
 
-            // 1. Mevcut state'ten çıkış yap
+            // state den çıkış yapar
             _currentState.OnExit();
-            // 2. Yeni state'i mevcut state olarak ata
+            // yeni state i alır
             _currentState = newState;
-            // 3. Yeni state'e giriş yap
+            // yeni state e girer
             _currentState.OnEnter();
         }
-
-        // Mevcut state'in Update'ini çalıştır (gerekirse)
         public void Update()
         {
             _currentState.OnUpdate();

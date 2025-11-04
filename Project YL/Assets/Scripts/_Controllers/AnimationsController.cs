@@ -1,4 +1,3 @@
-// Dosya Yolu: Assets/Scripts/_Controllers/AnimationsController.cs
 using System;
 using _States; 
 using UnityEngine;
@@ -15,25 +14,21 @@ namespace _Controllers
     }
     public class AnimationsControl : MonoBehaviour
     {
-        // ==> Components
         [SerializeField] private Animator animator; 
 
         private HeroAnimStateController _heroAnimStateController; 
         
-        // Yürüme state'leri
         private HeroAnimState _idleAnimState;
         private HeroAnimState _forwardWalkAnimState;
         private HeroAnimState _backwardWalkAnimState; 
         private HeroAnimState _leftWalkAnimState;     
         private HeroAnimState _rightWalkAnimState;    
 
-        // YENİ: Koşma state'leri
         private HeroAnimState _forwardRunAnimState;
         private HeroAnimState _backwardRunAnimState;
         private HeroAnimState _leftRunAnimState;
         private HeroAnimState _rightRunAnimState;
 
-        // YENİ: Zıplama state'leri
         private HeroAnimState _normalJumpAnimState;
         private HeroAnimState _runningJumpAnimState;
 
@@ -46,7 +41,6 @@ namespace _Controllers
         private HeroAnimState _aimLeftWalkAnimState;
         private HeroAnimState _aimRightWalkAnimState;
 
-        // ==> Enums
         private enum AnimationsEnum : byte
         {
             Idle,
@@ -69,26 +63,22 @@ namespace _Controllers
             AimRightWalk
         }
 
-        // ==> Unity Event Functions
         private void Awake()
         {
             if (animator == null)
             {
-                Debug.LogError("Animator is not assigned in AnimationsControl!");
+                Debug.LogError("AnimationsControl içerisinde Animator atanmamış");
                 return;
             }
             
-            // State'leri ve yöneticiyi oluştur
             _heroAnimStateController = new HeroAnimStateController(animator);
             
-            // Yürüme
             _idleAnimState = new IdleAnimState(animator);
             _forwardWalkAnimState = new ForwardWalkAnimState(animator);
             _backwardWalkAnimState = new BackwardWalkAnimState(animator); 
             _leftWalkAnimState = new LeftWalkAnimState(animator);         
             _rightWalkAnimState = new RightWalkAnimState(animator);       
             
-            // Koşma (YENİ)
             _forwardRunAnimState = new ForwardRunAnimState(animator);
             _backwardRunAnimState = new BackwardRunAnimState(animator);
             _leftRunAnimState = new LeftRunAnimState(animator);
@@ -107,7 +97,6 @@ namespace _Controllers
             
         }
         
-        // Ana animasyon kontrolcüsü (switch-case ile)
         private void AnimatoinsController(AnimationsEnum expression)
         {
             switch (expression)
@@ -172,15 +161,12 @@ namespace _Controllers
                     throw new ArgumentOutOfRangeException(nameof(expression), expression, null);
             }
         }
-
-        // ==> PlayerController'ın çağıracağı PUBLIC metotlar
         
         public void IdleAnim()
         {
             AnimatoinsController(AnimationsEnum.Idle);
         }
         
-        // YENİ: Bu metot, PlayerController'daki 8 yönlü animasyon mantığını basitleştirir
         public void ChangeAnim(bool isRunning, AnimType type)
         {
             if (isRunning)
@@ -193,7 +179,7 @@ namespace _Controllers
                     case AnimType.Right: AnimatoinsController(AnimationsEnum.RightRun); break;
                 }
             }
-            else // Yürüyorsa
+            else 
             {
                 switch (type)
                 {
@@ -205,7 +191,6 @@ namespace _Controllers
             }
         }
         
-        // YENİ Zıplama Metotları
         public void NormalJumpAnim()
         {
             AnimatoinsController(AnimationsEnum.NormalJump);

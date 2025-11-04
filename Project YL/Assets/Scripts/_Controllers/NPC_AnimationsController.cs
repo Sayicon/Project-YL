@@ -1,17 +1,14 @@
-// Dosya Yolu: Assets/Scripts/_Controllers/NPC_AnimationsControl.cs
 using System;
-using _States; // Paylaşılan HeroAnimState'i kullanmak için
+using _States; 
 using UnityEngine;
 
 namespace _Controllers
 {
-    // Bu script NPC GameObject'ine takılacak
     public class NPC_AnimationsControl : MonoBehaviour
     {
         [SerializeField] private Animator animator;
         private HeroAnimStateController _heroAnimStateController; 
 
-        // NPC'nin tüm state'leri
         private HeroAnimState _idleState;
         private HeroAnimState _walkState;
         private HeroAnimState _runState;
@@ -20,7 +17,6 @@ namespace _Controllers
         private HeroAnimState _turnLeftState;
         private HeroAnimState _turnRightState;
         
-        // NPC'nin beyninin ("NPC_Controller") anlayabileceği komutlar
         private enum NPC_AnimationsEnum 
         { 
             Idle, 
@@ -36,10 +32,8 @@ namespace _Controllers
         {
             if (animator == null) animator = GetComponent<Animator>();
             
-            // Player'ın kullandığı HeroAnimStateController'ı kullanıyoruz
             _heroAnimStateController = new HeroAnimStateController(animator); 
             
-            // NPC'nin animasyon state'lerini oluşturuyoruz
             _idleState = new NPC_IdleState(animator);
             _walkState = new NPC_WalkState(animator);
             _runState = new NPC_RunState(animator);
@@ -49,7 +43,6 @@ namespace _Controllers
             _turnRightState = new NPC_TurnRightState(animator);
         }
         
-        // Bu metot, HeroAnimStateController'a hangi state'e geçeceğini söyler
         private void ChangeAnimation(NPC_AnimationsEnum expression)
         {
             switch (expression)
@@ -64,7 +57,6 @@ namespace _Controllers
             }
         }
 
-        // === PUBLIC KOMUTLAR (NPC'nin beyni bu komutları çağıracak) ===
         public void IdleAnim() { ChangeAnimation(NPC_AnimationsEnum.Idle); }
         public void WalkAnim() { ChangeAnimation(NPC_AnimationsEnum.Walk); }
         public void RunAnim() { ChangeAnimation(NPC_AnimationsEnum.Run); }

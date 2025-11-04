@@ -1,16 +1,13 @@
-// Dosya yolu: Assets/Scripts/_States/AnimStates.cs
 using UnityEngine;
 
 namespace _States
 {
-    // IDLE (Durma) STATE
     public class IdleAnimState : HeroAnimState
     {
         public IdleAnimState(Animator animator) : base(animator) { }
 
         public override void OnEnter()
         {
-            // "idle" durumuna 0.1 saniyelik yumuşak geçiş yapar
             Animator.CrossFade("idle", 0.1f); 
         }
 
@@ -18,7 +15,6 @@ namespace _States
         public override void OnExit() { }
     }
 
-    // "WalkAnimState" adını "ForwardWalkAnimState" olarak değiştirdik
     public class ForwardWalkAnimState : HeroAnimState
     {
         public ForwardWalkAnimState(Animator animator) : base(animator) { }
@@ -32,59 +28,50 @@ namespace _States
         public override void OnExit() { }
     }
 
-    // YENİ: GERİ YÜRÜME STATE'İ
     public class BackwardWalkAnimState : HeroAnimState
     {
         public BackwardWalkAnimState(Animator animator) : base(animator) { }
         public override void OnEnter()
         {
-            // Animator'de "backward walking" adında bir state olmalı
             Animator.CrossFade("ayakta_geri_yürüme", 0.1f);
         }
         public override void OnUpdate() { }
         public override void OnExit() { }
     }
 
-    // YENİ: SOL YÜRÜME (STRAFE) STATE'İ
     public class LeftWalkAnimState : HeroAnimState
     {
         public LeftWalkAnimState(Animator animator) : base(animator) { }
         public override void OnEnter()
         {
-            // Animator'de "left strafe" adında bir state olmalı
             Animator.CrossFade("ayakta_sola_yürüme", 0.1f);
         }
         public override void OnUpdate() { }
         public override void OnExit() { }
     }
 
-    // YENİ: SAĞ YÜRÜME (STRAFE) STATE'İ
     public class RightWalkAnimState : HeroAnimState
     {
         public RightWalkAnimState(Animator animator) : base(animator) { }
         public override void OnEnter()
         {
-            // Animator'de "right strafe" adında bir state olmalı
             Animator.CrossFade("ayakta_saga_yürüme", 0.1f);
         }
         public override void OnUpdate() { }
         public override void OnExit() { }
     }
 
-    // İLERİ KOŞMA STATE'İ
     public class ForwardRunAnimState : HeroAnimState
     {
         public ForwardRunAnimState(Animator animator) : base(animator) { }
         public override void OnEnter()
         {
-            // ÖNEMLİ: Animator'deki state adını "ayakta_ileri_kosma" ile değiştirin
             Animator.CrossFade("ayakta_ileri_kosma", 0.1f);
         }
         public override void OnUpdate() { }
         public override void OnExit() { }
     }
 
-    // GERİ KOŞMA STATE'İ
     public class BackwardRunAnimState : HeroAnimState
     {
         public BackwardRunAnimState(Animator animator) : base(animator) { }
@@ -96,7 +83,6 @@ namespace _States
         public override void OnExit() { }
     }
 
-    // SOL KOŞMA (STRAFE) STATE'İ
     public class LeftRunAnimState : HeroAnimState
     {
         public LeftRunAnimState(Animator animator) : base(animator) { }
@@ -108,7 +94,6 @@ namespace _States
         public override void OnExit() { }
     }
 
-    // SAĞ KOŞMA (STRAFE) STATE'İ
     public class RightRunAnimState : HeroAnimState
     {
         public RightRunAnimState(Animator animator) : base(animator) { }
@@ -125,8 +110,6 @@ namespace _States
         public NormalJumpAnimState(Animator animator) : base(animator) { }
         public override void OnEnter() 
         { 
-            // Zıplama animasyonları genellikle başa sarılmalı ve kesilmemelidir.
-            // Bu yüzden "CrossFade" yerine "Play" kullanmak daha iyi olabilir.
             Animator.Play("ziplama"); 
         }
         public override void OnUpdate() { }
@@ -144,26 +127,22 @@ namespace _States
         public override void OnExit() { }
     }
     
-    // Bu, "nişan alma" (geçiş) animasyonudur
     public class StartAimingAnimState : HeroAnimState
     {
         public StartAimingAnimState(Animator animator) : base(animator) { }
         public override void OnEnter() 
         { 
-            // Bu animasyon kesilmemeli ve baştan başlamalı
-            Animator.Play("ayakta_nisan_alma", 0, 0f); // 0. katman, baştan başla
+            Animator.Play("ayakta_nisan_alma", 0, 0f); 
         }
         public override void OnUpdate() { }
         public override void OnExit() { }
     }
 
-    // Bu, "nişanda bekleme" (idle) animasyonudur
     public class AimIdleAnimState : HeroAnimState
     {
         public AimIdleAnimState(Animator animator) : base(animator) { }
         public override void OnEnter()
         {
-            // Bu animasyona yumuşak geçiş yapılabilir
             Animator.CrossFade("ayakta_nisanda_bekleme", 0.1f);
         }
         public override void OnUpdate() { }
@@ -175,8 +154,7 @@ namespace _States
         public ShootAnimState(Animator animator) : base(animator) { }
         public override void OnEnter()
         {
-            // Atış animasyonu kesilmemeli ve baştan başlamalı
-            Animator.Play("ok_at", 0, 0f); // 0. katman, baştan başla
+            Animator.Play("ok_at", 0, 0f); 
         }
         public override void OnUpdate() { }
         public override void OnExit() { }
