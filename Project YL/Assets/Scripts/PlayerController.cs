@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private GameObject player;
+    [SerializeField] private GameObject playerModel;
     private Rigidbody rb;
     
     [Header("Player Movement Settings")]
