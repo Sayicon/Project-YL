@@ -15,9 +15,9 @@
               "state": {
                 "file": "Canvas/Plan.canvas",
                 "viewState": {
-                  "x": 2331.3228241306056,
-                  "y": -789.8933671971301,
-                  "zoom": -0.6701627749661401
+                  "x": 2097,
+                  "y": -644,
+                  "zoom": -1.9426964567308402
                 }
               },
               "icon": "lucide-layout-dashboard",
@@ -81,7 +81,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "8f593210b62b87b3",
@@ -174,6 +175,8 @@
   },
   "active": "01cc07040bc8b789",
   "lastOpenFiles": [
+    "Canvas/Plan.canvas.meta",
+    "Canvas.meta",
     "Plan.canvas",
     "Canvas/Plan.canvas",
     "Canvas",
