@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -45,7 +45,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -139,28 +139,20 @@ TextureImporter:
       name: butonlar_0
       rect:
         serializedVersion: 2
-        x: 249
+        x: 250
         y: 693
-        width: 533
-        height: 146
+        width: 531
+        height: 143
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
-      outline:
-      - - {x: 0, y: -32}
-        - {x: 32, y: 0}
-        - {x: 0, y: 32}
-        - {x: -32, y: 0}
-      physicsShape:
-      - - {x: 0, y: -32}
-        - {x: 32, y: 0}
-        - {x: 0, y: 32}
-        - {x: -32, y: 0}
+      outline: []
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 625f7b62e047b47a48c9ef6ed59a20ef
-      internalID: 717636297
+      spriteID: e438d707f36c147fcab14d10b481e593
+      internalID: -1576355442
       vertices: []
       indices: 
       edges: []
@@ -170,19 +162,19 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 250
-        y: 521
-        width: 527
-        height: 140
+        y: 522
+        width: 530
+        height: 139
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 07f8b2f40e5b34ae88c2da80ded33bd3
-      internalID: -915131051
+      spriteID: a23b706681e6e4ec88b5bce48510afdc
+      internalID: -1816782742
       vertices: []
       indices: 
       edges: []
@@ -191,20 +183,20 @@ TextureImporter:
       name: butonlar_2
       rect:
         serializedVersion: 2
-        x: 247
-        y: 349
-        width: 531
-        height: 145
+        x: 251
+        y: 350
+        width: 526
+        height: 141
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3bb0fcd5d8b9548e5abffc90d2d2b0fd
-      internalID: 1225765414
+      spriteID: 4dc9eeb03962d4f5298002ad74cb3d33
+      internalID: -1317441566
       vertices: []
       indices: 
       edges: []
@@ -214,19 +206,19 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 259
-        y: 150
-        width: 516
-        height: 175
+        y: 152
+        width: 517
+        height: 170
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 678352ed6e6064c86bf015f507dc1caf
-      internalID: 1997159238
+      spriteID: 3b93cebbdb18b42259ec36159f89098d
+      internalID: -1018001102
       vertices: []
       indices: 
       edges: []
@@ -235,7 +227,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: e7df5d21ee09841a9b699f22aab4f780
+    spriteID: c5a2ad783d79e4a4aa8544d00afc634c
     internalID: 0
     vertices: []
     indices: 
@@ -245,10 +237,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      butonlar_0: 717636297
-      butonlar_1: -915131051
-      butonlar_2: 1225765414
-      butonlar_3: 1997159238
+      butonlar_0: -1576355442
+      butonlar_1: -1816782742
+      butonlar_2: -1317441566
+      butonlar_3: -1018001102
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
