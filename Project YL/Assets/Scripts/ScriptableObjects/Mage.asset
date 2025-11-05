@@ -12,44 +12,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 273c6e462dc8a694486dc481aa670e5e, type: 3}
   m_Name: Mage
   m_EditorClassIdentifier: 
-  creatureName: 
-  creatureType: 0
-  model: {fileID: 0}
-  groundTags: []
+  creatureName: Mage
+  creatureType: 1
+  model: {fileID: 919132149155446097, guid: 0770ef6d92574974bbe518aa42f9b446, type: 3}
+  groundTags:
+  - Ground
   animator: {fileID: 0}
   hasGold: 0
-  characterType: 0
-  projectileCount: 0
-  maxHealth: 0
+  characterType: 2
+  projectileCount: 10
+  maxHealth: 100
   attackDamage:
-    baseValue: 0
-    multiplier: 0
-    total: 0
+    baseValue: 1
+    multiplier: 1
+    total: 1
   movementSpeed:
-    baseValue: 0
-    multiplier: 0
-    total: 0
+    baseValue: 8
+    multiplier: 1
+    total: 8
   attackSpeed:
-    baseValue: 0
-    multiplier: 0
-    total: 0
+    baseValue: 1
+    multiplier: 1
+    total: 1
   projectileScale:
-    baseValue: 0
-    multiplier: 0
-    total: 0
+    baseValue: 1
+    multiplier: 1
+    total: 1
   collectionRange:
-    baseValue: 0
-    multiplier: 0
-    total: 0
+    baseValue: 1
+    multiplier: 1
+    total: 1
   chance:
-    baseValue: 0
-    multiplier: 0
-    total: 0
+    baseValue: 1
+    multiplier: 1
+    total: 1
   attackRange:
-    baseValue: 0
-    multiplier: 0
-    total: 0
+    baseValue: 1
+    multiplier: 1
+    total: 1
   helathRegen:
-    baseValue: 0
-    multiplier: 0
-    total: 0
+    baseValue: 1
+    multiplier: 1
+    total: 1

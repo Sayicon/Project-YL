@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : Creature
 {
     [Header("Character Requeriments")]
+    [SerializeField] List<Weapon> weapons;
     [SerializeField] private CharacterConfigSO characterConfig;
-    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject playerModelObject;
     [SerializeField] private List<string> groundTags; // Editörden tag'leri seçmek için
     private Rigidbody rb;
     [SerializeField] private Animator animator; //Animasyonlar eklenince serileştirme kaldırılcak
@@ -33,13 +35,17 @@ public class Player : Creature
     private Stat attackRange;
 
     /* Config eklenicekler
-        [] - Wapon[] weapons; //başlangıçta 1 tane 
+        [] - Karakter resmi ui için
+        [x] - Wapon[] weapons; //başlangıçta 1 tane 
         [] - Tome[] tomes; //başlangıçta yok
         [] - SpecialItem[] specialItems; //başlangıçta yok
         [x] - Animator animator;
         [x] - private List<string> groundTags;
         [x] - private GameObject playerModel;
     */
+
+    [SerializeField] Weapon[] denemeWeapons;
+    int deneme;
 
 
     //----
@@ -54,7 +60,27 @@ public class Player : Creature
         PlayerMovment();
     }
 
-    public void OnMove(InputValue value)
+	void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.G) && denemeWeapons[deneme] != null)
+        {
+            AddWeaponToInventory(denemeWeapons[deneme]);
+            deneme++;
+        }
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            // Silah tetik testi
+            if (weapons.Count > 0)
+            {
+                Debug.Log("AttackRange: " + AttackRange.TotalValue);
+                weapons[0].SetFiring(true, this);
+                Debug.Log("test");
+			}
+        }
+	}
+
+	public void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
     }
@@ -68,21 +94,29 @@ public class Player : Creature
         }
     }
 
+    public void AddWeaponToInventory(Weapon weapon)
+	{
+        if (weapon == null) return;
+        weapons.Add(weapon);
+
+        weapon.SetFiring(true, this);
+        Debug.Log($"Yeni silah eklendi: {weapon.WeaponName}"); 
+	}
+
     void InitPlayer(CharacterConfigSO characterConfig)
     {
-        if (player != null)
-        {
-            rb = player.GetComponent<Rigidbody>();
-            if (rb == null)
-                Debug.LogError("Rigidbody component not found on the player GameObject.");
-        }
-        else
-            Debug.Log("Player GameObject is not assigned in the inspector.");
+        rb = GetComponent<Rigidbody>();
+        if (rb == null)
+            Debug.LogError("Rigidbody component not found on the player GameObject.");
         if (characterConfig != null)
         {
             creatureName = characterConfig.CreatureName;
             creatureType = characterConfig.CreatureType;
-            model = characterConfig.Model;
+            if (characterConfig.Model != null)
+            {
+                model = Instantiate(original: characterConfig.Model, position: playerModelObject.transform.position - Vector3.up,
+                        rotation: Quaternion.Euler(0, 0, 0), parent: playerModelObject.transform);
+            }
             groundTags = characterConfig.GroundTags;
             animator = characterConfig.Animator;
             hasGold = characterConfig.HasGold;
@@ -105,7 +139,6 @@ public class Player : Creature
 
             creatureName = "Default Adventurer";
             creatureType = eCreatureType.Player;
-            model = null;
             groundTags = new List<string> { "Ground", "Platform" };
             animator = GetComponent<Animator>();
             hasGold = 0;
@@ -144,7 +177,7 @@ public class Player : Creature
         Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0f, Camera.main.transform.right.z).normalized;
 
         Vector3 inputDir = cameraForward * moveInput.y + cameraRight * moveInput.x;
-        Vector3 desiredVelocity = inputDir * moveSpeed;
+        Vector3 desiredVelocity = inputDir * movementSpeed.TotalValue;
 
         // Haraket
         Vector3 currentVel = rb.linearVelocity;
