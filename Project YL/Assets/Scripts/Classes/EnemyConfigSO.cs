@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName ="Enemy Config", fileName ="New Enemy Config")]
+[CreateAssetMenu(menuName ="New Enemy Config", fileName ="Enemy Config")]
 public class EnemyConfigSO : ScriptableObject
 {
     [SerializeField] private string enemyName;

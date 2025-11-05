@@ -42,7 +42,7 @@ public struct Stat
 public enum eCreatureType
 {
     None,
-    Human,
+    Player,
     Enemy,
 }
 
@@ -53,4 +53,11 @@ public enum eEnemyType
     Gianthead,
     Goblin,
     Boss
+}
+
+public enum eCharacter
+{
+    None,
+    Warrior,
+    Mage
 }

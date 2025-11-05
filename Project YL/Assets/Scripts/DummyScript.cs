@@ -40,11 +40,11 @@ public class DummyScript : MonoBehaviour
 
     void InitDummy(Enemy enemy)
     {
-        currentHealth = Mathf.RoundToInt(enemy.health);
+        currentHealth = Mathf.RoundToInt(enemy.Health);
         healthBar.SetMaxHealth(maxHealth);
         healthBar.SetHealth(currentHealth);
 
-        chaseSpeed = enemy.movementSpeed.TotalValue;
+        chaseSpeed = enemy.MovementSpeed.TotalValue;
     }
 
 
