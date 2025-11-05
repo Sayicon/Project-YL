@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class DummyScript : MonoBehaviour
 {
+    Enemy enemy;
     [Header("Chase Settings")]
     public bool canChase = false; // Checkbox to enable/disable chasing
     public Transform target; // Target to chase
@@ -25,6 +26,9 @@ public class DummyScript : MonoBehaviour
     {
         // Initialize health
         currentHealth = maxHealth;
+        enemy = GetComponent<Enemy>();
+        if (enemy != null)
+            InitDummy(enemy);
         healthBar.SetMaxHealth(maxHealth);
 
         //Playeri bul
@@ -33,6 +37,16 @@ public class DummyScript : MonoBehaviour
         // Cache Rigidbody
         rb = GetComponent<Rigidbody>();
     }
+
+    void InitDummy(Enemy enemy)
+    {
+        currentHealth = Mathf.RoundToInt(enemy.health);
+        healthBar.SetMaxHealth(maxHealth);
+        healthBar.SetHealth(currentHealth);
+
+        chaseSpeed = enemy.movementSpeed.TotalValue;
+    }
+
 
     void Update()
     {
@@ -82,10 +96,33 @@ public class DummyScript : MonoBehaviour
     private IEnumerator DamageFlash(Material mat, Color flashColor, float duration)
     {
         mat.EnableKeyword("_EMISSION");
-        mat.SetColor("_EmissionColor", flashColor);
-        yield return new WaitForSeconds(duration);
+
+        Color originalColor = mat.GetColor("_EmissionColor");
+        float timer = 0f;
+
+        // Parlamaya doğru geçiş
+        while (timer < duration / 2f)
+        {
+            timer += Time.deltaTime;
+            float t = timer / (duration / 2f);
+            mat.SetColor("_EmissionColor", Color.Lerp(originalColor, flashColor, t));
+            yield return null;
+        }
+
+        // Geri solma
+        timer = 0f;
+        while (timer < duration / 2f)
+        {
+            timer += Time.deltaTime;
+            float t = timer / (duration / 2f);
+            mat.SetColor("_EmissionColor", Color.Lerp(flashColor, originalColor, t));
+            yield return null;
+        }
+
+        mat.SetColor("_EmissionColor", originalColor);
         mat.DisableKeyword("_EMISSION");
     }
+
 
     private IEnumerator DamageEffect()
     {
