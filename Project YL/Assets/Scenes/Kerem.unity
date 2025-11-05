@@ -436,24 +436,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8853c4a9d47d1d044b78e0644a9fbf46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  creatureName: 
-  creatureType: 0
-  level: 0
-  health: 0
-  maxHealth: 0
-  attackDamage:
-    baseValue: 0
-    multiplier: 0
-    total: 0
-  movementSpeed:
-    baseValue: 0
-    multiplier: 0
-    total: 0
-  attackSpeed:
-    baseValue: 0
-    multiplier: 0
-    total: 0
-  model: {fileID: 0}
   chase: 0
   climbableLayer:
     serializedVersion: 2
@@ -2313,24 +2295,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8853c4a9d47d1d044b78e0644a9fbf46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  creatureName: 
-  creatureType: 2
-  level: 0
-  health: 0
-  maxHealth: 0
-  attackDamage:
-    baseValue: 0
-    multiplier: 0
-    total: 0
-  movementSpeed:
-    baseValue: 0
-    multiplier: 0
-    total: 0
-  attackSpeed:
-    baseValue: 0
-    multiplier: 0
-    total: 0
-  model: {fileID: 0}
   chase: 0
   climbableLayer:
     serializedVersion: 2
@@ -5077,6 +5041,31 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1818534093}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1826188522 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5363485657487054001, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
+  m_PrefabInstance: {fileID: 5515046598185924969}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1826188529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826188522}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c8790ee153ba5b4ca0ee4b9283434dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterConfig: {fileID: 0}
+  player: {fileID: 0}
+  groundTags: []
+  animator: {fileID: 0}
+  moveSpeed: 5
+  rotationSpeed: 10
+  acceleration: 50
+  jumpForce: 5
 --- !u!1001 &1837320655
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6040,6 +6029,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'Player '
       objectReference: {fileID: 0}
+    - target: {fileID: 6501958957158679365, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6622722181162834649, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
       propertyPath: m_LocalPosition.x
       value: 16.96
@@ -6083,7 +6076,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5363485657487054001, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
+      insertIndex: 3
+      addedObject: {fileID: 1826188529}
   m_SourcePrefab: {fileID: 100100000, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
 --- !u!1001 &7273608298132925609
 PrefabInstance:
@@ -6160,6 +6156,14 @@ PrefabInstance:
     - target: {fileID: 4755848324497205865, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4755848324497205865, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
+      propertyPath: chaseSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094614723957475988, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
+      propertyPath: m_Mass
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
