@@ -1,1 +1,16 @@
-* text eol=crlf
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.fbx binary
+*.obj binary
+*.wav binary
+*.mp3 binary
+*.anim binary
+*.prefab binary
+*.mat binary
+*.unity binary
+*.asset binary
+*.exr binary
+*.tga binary
+*.psd binary
