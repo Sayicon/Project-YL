@@ -42,7 +42,7 @@ public class CameraController : MonoBehaviour
     
         if (Physics.Raycast(player.position, desiredPosition - player.position, out hit, distanceFromPlayer))
         {
-            if (!hit.collider.CompareTag("Enemy"))
+            if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Projectile"))
             {
                 Vector3 safePos = hit.point - (desiredPosition - player.position).normalized * 0.2f;
                 transform.position = safePos;
