@@ -36,19 +36,26 @@ public class CameraController : MonoBehaviour
 
         // Kamera pozisyonunu ayarla
         distanceFromPlayer -= mouseWhell;
-        distanceFromPlayer = Mathf.Clamp(distanceFromPlayer, 2f, 15f); // Mesafeyi sınırla
+        distanceFromPlayer = Mathf.Clamp(distanceFromPlayer, 3f, 15f); // Mesafeyi sınırla
         Vector3 desiredPosition = Vector3.Lerp(transform.position, player.position - transform.forward * distanceFromPlayer, Time.deltaTime * 10f * lerpSens);
         RaycastHit hit;
     
         if (Physics.Raycast(player.position, desiredPosition - player.position, out hit, distanceFromPlayer))
         {
-            transform.position = hit.point; // Çarpışma noktasına yerleştir
+            if (!hit.collider.CompareTag("Enemy"))
+            {
+                Vector3 safePos = hit.point - (desiredPosition - player.position).normalized * 0.2f;
+                transform.position = safePos;
+            }
+            else
+            {
+                transform.position = desiredPosition;
+            }
         }
         else
         {
-            transform.position = desiredPosition; // Normal pozisyona yerleştir
+            transform.position = desiredPosition;
         }
-    
         // Kamerayı oyuncuya çevir
         transform.LookAt(player.position + Vector3.up * 1.5f); // Oyuncunun biraz yukarısına bak
     }
