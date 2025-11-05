@@ -3,21 +3,16 @@ using UnityEngine;
 
 public abstract class Creature : MonoBehaviour
 {
-    [SerializeField] protected eCreatureType type;
-    protected int level;
-    protected float health { get; set; }
-    protected float maxHealth { get; set; }
-
-    protected Stat attackDamage { get; set; }
-    protected Stat movementSpeed { get; set; }
-
-    protected Stat attackSpeed { get; set; }
-    protected GameObject Model { get; set; }
-    protected virtual void Awake()
-    {
-        RecalculateStats();
-        health = maxHealth;
-    }
+    [Header("Burdan Editleme")]
+    [SerializeField] public string creatureName;
+    [SerializeField] public eCreatureType creatureType;
+    [SerializeField] public int level;
+    [SerializeField] public float health;
+    [SerializeField] public float maxHealth;
+    [SerializeField] public Stat attackDamage;
+    [SerializeField] public Stat movementSpeed;
+    [SerializeField] public Stat attackSpeed;
+    [SerializeField] public GameObject model;
 
     public virtual void GiveDamage(Creature target)
     {
@@ -40,8 +35,9 @@ public abstract class Creature : MonoBehaviour
         attackSpeed.Recalculate();
     }
 
-    public void Die()
+    public virtual void Die()
     {
-        Destroy(gameObject);
+        Debug.Log(name + " has Died");
+        gameObject.SetActive(false);
     }
 }

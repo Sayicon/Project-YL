@@ -171,6 +171,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: cross-wood (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b684acc1bb4f0284296ae14275ed221a, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -228,6 +232,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (18)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -247,7 +255,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 32230127}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -331,6 +339,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -398,11 +410,59 @@ PrefabInstance:
       propertyPath: m_Name
       value: bench
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 59a12db0e82dc5d42ad7591a92927e24, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59a12db0e82dc5d42ad7591a92927e24, type: 3}
+--- !u!1 &290853213 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 535140262553527146, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
+  m_PrefabInstance: {fileID: 7273608298132925609}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &290853220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 290853213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8853c4a9d47d1d044b78e0644a9fbf46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  creatureName: 
+  creatureType: 0
+  level: 0
+  health: 0
+  maxHealth: 0
+  attackDamage:
+    baseValue: 0
+    multiplier: 0
+    total: 0
+  movementSpeed:
+    baseValue: 0
+    multiplier: 0
+    total: 0
+  attackSpeed:
+    baseValue: 0
+    multiplier: 0
+    total: 0
+  model: {fileID: 0}
+  chase: 0
+  climbableLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  climbForce: 20
+  wallCheckDistance: 1
+  enemyConfig: {fileID: 11400000, guid: 65c5a23a0afb6914ba5f3bf3a2c9b7ea, type: 2}
+  damageColor: {r: 1, g: 1, b: 1, a: 1}
+  damageEffectDuration: 0.2
 --- !u!4 &307859735 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fd23778b8a6f58246a10110b58ab6860, type: 3}
@@ -459,6 +519,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a273496b1f1fc254ca04f975d1b04228, type: 3}
       propertyPath: m_Name
       value: rocks
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a273496b1f1fc254ca04f975d1b04228, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -517,6 +581,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (17)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -536,7 +604,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 365600443}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -622,6 +690,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: debris
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 127cfa0384b6c53479e6be86dd91e488, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -639,7 +711,7 @@ GameObject:
   - component: {fileID: 369289868}
   - component: {fileID: 369289867}
   - component: {fileID: 369289866}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (4)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -655,7 +727,7 @@ Transform:
   m_GameObject: {fileID: 369289864}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.4765484, y: -0.17336158, z: -0.55114406}
+  m_LocalPosition: {x: 0.596, y: -0.17336158, z: -0.551}
   m_LocalScale: {x: 0.20015055, y: 0.20015052, z: 0.20015055}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -748,7 +820,7 @@ GameObject:
   - component: {fileID: 370218726}
   - component: {fileID: 370218725}
   - component: {fileID: 370218724}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (5)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -764,7 +836,7 @@ Transform:
   m_GameObject: {fileID: 370218722}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.54616904, y: -0.099758945, z: -0.4383093}
+  m_LocalPosition: {x: 0.615, y: -0.099758945, z: -0.438}
   m_LocalScale: {x: 0.20015055, y: 0.20015052, z: 0.20015055}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -897,6 +969,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -926,7 +1002,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 394211815}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1000,6 +1076,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1014,7 +1094,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 409526043}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1088,6 +1168,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1105,7 +1189,7 @@ GameObject:
   - component: {fileID: 428075783}
   - component: {fileID: 428075782}
   - component: {fileID: 428075781}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (3)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -1258,6 +1342,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1335,6 +1423,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1391,6 +1483,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 08f8014b341ff334ca20c2e8b3f80068, type: 3}
       propertyPath: m_Name
       value: crypt-a
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 08f8014b341ff334ca20c2e8b3f80068, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1449,6 +1545,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: debris (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 127cfa0384b6c53479e6be86dd91e488, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1506,6 +1606,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: crypt (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e9114b7df0f10ad4c9d7f7f6fb4590f5, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1523,7 +1627,7 @@ GameObject:
   - component: {fileID: 660539710}
   - component: {fileID: 660539709}
   - component: {fileID: 660539708}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (13)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -1539,7 +1643,7 @@ Transform:
   m_GameObject: {fileID: 660539706}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.13420326, y: 0.37969232, z: 0.57503897}
+  m_LocalPosition: {x: 0.223, y: 0.37969232, z: 0.575}
   m_LocalScale: {x: 0.20015055, y: 0.20015052, z: 0.20015055}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1629,7 +1733,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 665586675}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Envoriment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1714,7 +1818,7 @@ GameObject:
   - component: {fileID: 673812184}
   - component: {fileID: 673812183}
   - component: {fileID: 673812182}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (6)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -1816,11 +1920,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e9114b7df0f10ad4c9d7f7f6fb4590f5, type: 3}
   m_PrefabInstance: {fileID: 655480975}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &709479132 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6622722181162834649, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-  m_PrefabInstance: {fileID: 5515046598185924969}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &715150226
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1885,6 +1984,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pine-fall (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1899,7 +2002,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 731628297}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1930,7 +2033,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 733020503}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2004,6 +2107,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2026,7 +2133,7 @@ GameObject:
   - component: {fileID: 808835018}
   - component: {fileID: 808835017}
   - component: {fileID: 808835016}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -2123,6 +2230,184 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 808835014}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &820492845
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 820492851}
+  - component: {fileID: 820492850}
+  - component: {fileID: 820492849}
+  - component: {fileID: 820492848}
+  - component: {fileID: 820492847}
+  - component: {fileID: 820492846}
+  m_Layer: 0
+  m_Name: Goblin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!54 &820492846
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820492845}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!136 &820492847
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820492845}
+  m_Material: {fileID: 13400000, guid: b640810d922e0eb47ab4005d87c67b8d, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &820492848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820492845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8853c4a9d47d1d044b78e0644a9fbf46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  creatureName: 
+  creatureType: 2
+  level: 0
+  health: 0
+  maxHealth: 0
+  attackDamage:
+    baseValue: 0
+    multiplier: 0
+    total: 0
+  movementSpeed:
+    baseValue: 0
+    multiplier: 0
+    total: 0
+  attackSpeed:
+    baseValue: 0
+    multiplier: 0
+    total: 0
+  model: {fileID: 0}
+  chase: 0
+  climbableLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  climbForce: 20
+  wallCheckDistance: 1
+  enemyConfig: {fileID: 11400000, guid: 65c5a23a0afb6914ba5f3bf3a2c9b7ea, type: 2}
+  damageColor: {r: 1, g: 1, b: 1, a: 1}
+  damageEffectDuration: 0.2
+--- !u!23 &820492849
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820492845}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &820492850
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820492845}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &820492851
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820492845}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.79, y: 1, z: -3.79}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &849978810
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2187,6 +2472,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pine-fall (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2201,7 +2490,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 850014805}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2292,6 +2581,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pine-fall (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2366,6 +2659,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: hay-bale-bundled
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fd23778b8a6f58246a10110b58ab6860, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2439,6 +2736,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
       propertyPath: m_Name
       value: pine-fall (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2517,6 +2818,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: crypt (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e9114b7df0f10ad4c9d7f7f6fb4590f5, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2573,6 +2878,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
       propertyPath: m_Name
       value: brick-wall (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2646,6 +2955,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall-curve (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7c9c3bb9e6a04f746b511af1bac7d1b6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2715,6 +3028,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pine-fall (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2729,7 +3046,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1186425399}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2763,7 +3080,7 @@ GameObject:
   - component: {fileID: 1220571354}
   - component: {fileID: 1220571353}
   - component: {fileID: 1220571352}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (12)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -2779,7 +3096,7 @@ Transform:
   m_GameObject: {fileID: 1220571350}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.3232586, y: 0.32944787, z: 0.60377175}
+  m_LocalPosition: {x: 0.397, y: 0.32944787, z: 0.604}
   m_LocalScale: {x: 0.20015055, y: 0.20015052, z: 0.20015055}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2912,6 +3229,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (15)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2969,6 +3290,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2983,7 +3308,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1259297296}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cubes
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -3051,7 +3376,7 @@ GameObject:
   - component: {fileID: 1309371754}
   - component: {fileID: 1309371753}
   - component: {fileID: 1309371752}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (2)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -3205,6 +3530,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: lightpost-single
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a5264df3059444b4d978e5c96562b188, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3266,6 +3595,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: b684acc1bb4f0284296ae14275ed221a, type: 3}
       propertyPath: m_Name
       value: cross-wood
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b684acc1bb4f0284296ae14275ed221a, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3336,6 +3669,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pine-fall (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3350,7 +3687,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1386766228}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3424,68 +3761,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
---- !u!1001 &1433394631
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1530444695}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
-      propertyPath: m_Name
-      value: character-j
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
 --- !u!1001 &1440463078
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3550,6 +3834,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pine-fall (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3607,6 +3895,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: crypt-a (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 08f8014b341ff334ca20c2e8b3f80068, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3624,7 +3916,7 @@ GameObject:
   - component: {fileID: 1451313862}
   - component: {fileID: 1451313861}
   - component: {fileID: 1451313860}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (8)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -3773,6 +4065,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: crypt
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e9114b7df0f10ad4c9d7f7f6fb4590f5, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3842,6 +4138,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pine-fall (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3899,43 +4199,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
---- !u!1 &1530444694
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1530444695}
-  m_Layer: 0
-  m_Name: Model
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1530444695
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1530444694}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1989271120}
-  m_Father: {fileID: 709479132}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1534511509 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
@@ -3993,6 +4265,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: lightpost-double
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bc609c37450dab34c839131f45e2514b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4010,7 +4286,7 @@ GameObject:
   - component: {fileID: 1614578234}
   - component: {fileID: 1614578233}
   - component: {fileID: 1614578232}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (10)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -4171,6 +4447,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pine-fall (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4240,6 +4520,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pine-fall (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4262,7 +4546,7 @@ GameObject:
   - component: {fileID: 1692832276}
   - component: {fileID: 1692832275}
   - component: {fileID: 1692832274}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (7)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -4416,6 +4700,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4472,6 +4760,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e9114b7df0f10ad4c9d7f7f6fb4590f5, type: 3}
       propertyPath: m_Name
       value: crypt (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e9114b7df0f10ad4c9d7f7f6fb4590f5, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4618,7 +4910,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1782158715}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4649,7 +4941,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1805243557}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4688,7 +4980,7 @@ GameObject:
   - component: {fileID: 1818534097}
   - component: {fileID: 1818534096}
   - component: {fileID: 1818534095}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (1)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -4837,6 +5129,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: brick-wall (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4899,6 +5195,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: cross-wood (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b684acc1bb4f0284296ae14275ed221a, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4916,7 +5216,7 @@ GameObject:
   - component: {fileID: 1907379014}
   - component: {fileID: 1907379013}
   - component: {fileID: 1907379012}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (9)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -5027,7 +5327,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1924760870}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5063,7 +5363,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1956781529}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5097,7 +5397,7 @@ GameObject:
   - component: {fileID: 1959926172}
   - component: {fileID: 1959926171}
   - component: {fileID: 1959926170}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (11)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -5113,7 +5413,7 @@ Transform:
   m_GameObject: {fileID: 1959926168}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.49954274, y: 0.26752433, z: 0.6189237}
+  m_LocalPosition: {x: 0.566, y: 0.26752433, z: 0.619}
   m_LocalScale: {x: 0.20015055, y: 0.20015052, z: 0.20015055}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5206,7 +5506,7 @@ GameObject:
   - component: {fileID: 1973516599}
   - component: {fileID: 1973516598}
   - component: {fileID: 1973516597}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -5308,11 +5608,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7c9c3bb9e6a04f746b511af1bac7d1b6, type: 3}
   m_PrefabInstance: {fileID: 1181312671}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1989271120 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
-  m_PrefabInstance: {fileID: 1433394631}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1998834774
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5364,6 +5659,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
       propertyPath: m_Name
       value: brick-wall (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5421,6 +5720,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 7c9c3bb9e6a04f746b511af1bac7d1b6, type: 3}
       propertyPath: m_Name
       value: brick-wall-curve
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7c9c3bb9e6a04f746b511af1bac7d1b6, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5483,6 +5786,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 08f8014b341ff334ca20c2e8b3f80068, type: 3}
       propertyPath: m_Name
       value: crypt-a (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 08f8014b341ff334ca20c2e8b3f80068, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5563,6 +5870,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pine-fall
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5629,6 +5940,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
       propertyPath: m_Name
       value: brick-wall (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d96a9d90c6ad8a2408ac38068634ad6b, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5699,6 +6014,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: pine-fall (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44d847ef861075d4a88b5ef1786ad3c6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5717,73 +6036,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2313928719604243391, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2313928719604243391, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2313928719604243391, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2313928719604243391, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2313928719604243391, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2313928719604243391, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4101224612825333949, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_Constraints
-      value: 112
-      objectReference: {fileID: 0}
-    - target: {fileID: 5117064758089932469, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_Height
-      value: 2.7192566
-      objectReference: {fileID: 0}
-    - target: {fileID: 5117064758089932469, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_Radius
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5117064758089932469, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_Center.y
-      value: 0.35103738
-      objectReference: {fileID: 0}
     - target: {fileID: 5363485657487054001, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
       propertyPath: m_Name
       value: 'Player '
-      objectReference: {fileID: 0}
-    - target: {fileID: 5363485657487054001, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 6501958957158679365, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: moveSpeed
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 6501958957158679365, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: acceleration
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6622722181162834649, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6622722181162834649, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6622722181162834649, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6622722181162834649, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5825,14 +6080,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1437275535732931119, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-    - {fileID: 710380335938936214, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 6622722181162834649, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1530444695}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e9e54289ae1fb6439fc5b6e7be3a736, type: 3}
 --- !u!1001 &7273608298132925609
@@ -5843,9 +6093,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 535140262553527146, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 1453724753139808019, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
       propertyPath: m_Name
       value: Dummy
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453724753139808019, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1507329838361822224, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5887,18 +6145,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1868977664463852829, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: b640810d922e0eb47ab4005d87c67b8d, type: 2}
     - target: {fileID: 4200136259919966604, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4200136259919966604, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4755848324497205865, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 535140262553527146, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 290853220}
   m_SourcePrefab: {fileID: 100100000, guid: 8a39055a1fb81ff4fa6234d8e15901a5, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
@@ -5908,3 +6177,4 @@ SceneRoots:
   - {fileID: 5515046598185924969}
   - {fileID: 7273608298132925609}
   - {fileID: 665586675}
+  - {fileID: 820492851}

@@ -8,6 +8,14 @@ public struct Stat
     [SerializeField] private float multiplier;
     [SerializeField] private float total;
 
+    public Stat(float baseValue, float multiplier)
+    {
+        this.baseValue = baseValue;
+        this.multiplier = multiplier;
+        this.total = baseValue * multiplier;
+    }
+
+
     public float BaseValue
     {
         get => baseValue;
@@ -23,12 +31,12 @@ public struct Stat
     public float TotalValue
 	{
         get => total;
-        set { total = value;  Recalculate(); }
+        set => total = value;
 	}
 
     public void Recalculate()
     {
-        total = Mathf.RoundToInt(baseValue * multiplier);
+        total = baseValue * multiplier;
     }
 }
 public enum eCreatureType
@@ -40,6 +48,7 @@ public enum eCreatureType
 
 public enum eEnemyType
 {
+    None,
     Zombie,
     Gianthead,
     Goblin,
