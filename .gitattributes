@@ -1,1 +1,15 @@
-* -text
+* text=auto eol=lf
+*.png filter=lfs diff=lfs merge=lfs -text
+*.jpg binary
+*.fbx filter=lfs diff=lfs merge=lfs -text
+*.obj filter=lfs diff=lfs merge=lfs -text
+*.wav binary
+*.mp3 binary
+*.anim binary
+*.prefab binary
+*.mat binary
+*.unity binary
+*.asset binary
+*.exr binary
+*.tga binary
+*.psd binary

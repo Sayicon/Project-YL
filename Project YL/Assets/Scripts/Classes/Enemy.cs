@@ -12,13 +12,15 @@ public class Enemy : Creature
     [SerializeField] float climbForce = 20f;
     [SerializeField] float wallCheckDistance = 1f;
 
-    [Header("Editle")]
+    // stats
     [SerializeField] protected EnemyConfigSO enemyConfig;
-    public bool isBoss { get; set; }
-    public bool isElit { get; set; }
-    public eEnemyType enemyType { get; set; }
-    public float givenXp { get; set; }
-    public float givenGold { get; set; }
+    private bool isBoss;
+    private bool isElit;
+    private eEnemyType enemyType;
+    private float givenXp;
+    private float givenGold;
+
+    // Script requariments
     private Animator animator;
     private Transform playerTransform;
     private Rigidbody rb;
@@ -190,5 +192,16 @@ public class Enemy : Creature
             yield return DamageFlash(enemyRenderer.material, damageColor, damageEffectDuration);
         }
     }
+
+    //Geter Seters
+    public bool IsBoss { get => isBoss; set => isBoss = value; }
+    public bool IsElit { get => isElit; set => isElit = value; }
+    public eEnemyType EnemyType { get => enemyType; set => enemyType = value; }
+    public float GivenXp { get => givenXp; set => givenXp = value; }
+    public float GivenGold { get => givenGold; set => givenGold = value; }
+    public Animator Animator { get => animator; set => animator = value; }
+    public Transform PlayerTransform { get => playerTransform; set => playerTransform = value; }
+    public Rigidbody Rb { get => rb; set => rb = value; }
+
 
 }
