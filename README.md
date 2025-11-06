@@ -8,9 +8,9 @@ Bu proje, Kocaeli Üniversitesi Teknoloji Fakültesi Bilişim Sistemleri Mühend
 
 ## 👥 Ekip Üyeleri
 
-- **Üye 1:** [İsim Soyisim] - [GitHub Kullanıcı Adı]
-- **Üye 2:** [İsim Soyisim] - [GitHub Kullanıcı Adı]
-- **Üye 3:** [İsim Soyisim] - [GitHub Kullanıcı Adı]
+- **Üye 1:** Mustafa MEhmet Aslandağ - mezoxy-dev
+- **Üye 2:** Oğuzhan Erbil - [GitHub Kullanıcı Adı]
+- **Üye 3:** Mustafa Kerem Çekici - [GitHub Kullanıcı Adı]
 
 ## 🎯 Oyun Senaryosu
 
