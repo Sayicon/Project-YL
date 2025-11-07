@@ -116,19 +116,24 @@ ana menüden oyunu başlatma, düşmanlarla çatışma ve portalı bulma süreci
 
 ```mermaid
 flowchart TD
-  A[Ana Menü] --> B{Seçim}
-  B --> |Play| C[Oyun Başlatılır]
-  B --> |Quit| D[Oyundan Çıkılır]
+  %% --- MENU ---
+  A[Main Menu] --> B{Select Option}
+  B --> |Play| C[Game Starts]
+  B --> |Quit| D[Exit Game]
 
-  C --> E[Müzik Başlar 🎵]
-  E --> F[Düşmanlar Doğar (Spawn)]
-  F --> G[Düşmanlar Oyuncuya Doğru Hareket Eder]
-  G --> H[Oyuncu Silahlarıyla Otomatik Olarak Saldırır 🔫]
-  H --> I[Portal Aranır]
-  I --> J{Portal Bulundu mu?}
-  J --> |Evet| K[Portala Gir -> Bölüm Tamamlandı 🌀]
-  J --> |Hayır| I
-
-  G --> L{Oyuncu Sağlığı Sıfır mı?}
-  L --> |Evet| M[Oyuncu Ölür 💀 -> Oyun Biter (Retry/Exit)]
-  L --> |Hayır| H
+  %% --- GAME START ---
+  C --> E[Music Starts Playing]
+  E --> F[Enemies Spawn Around Player]
+  F --> G[Enemies Move Toward Player]
+  G --> H[Player Auto-Shoots & Kills Enemies]
+  H --> I[Search for Portal]
+  
+  %% --- PORTAL SEARCH LOOP ---
+  I --> J{Portal Found?}
+  J --> |Yes| K[Enter Portal → Level Complete]
+  J --> |No| I
+  
+  %% --- OPTIONAL: PLAYER DEATH ---
+  G --> L{Player Health = 0?}
+  L --> |Yes| M[Player Dies → Game Over]
+  L --> |No| H
