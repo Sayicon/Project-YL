@@ -90,25 +90,7 @@ public class Player : Creature
         }
     }
 
-	void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.G) && denemeWeapons[deneme] != null)
-        {
-            AddWeaponToInventory(denemeWeapons[deneme]);
-            deneme++;
-        }
-
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            // Silah tetik testi
-            if (weapons.Count > 0)
-            {
-                Debug.Log("AttackRange: " + AttackRange.TotalValue);
-                weapons[0].SetFiring(true, this);
-                Debug.Log("test");
-			}
-        }
-	}
+	
 
 	public void OnMove(InputValue value)
     {
