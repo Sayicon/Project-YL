@@ -52,6 +52,7 @@ public enum eEnemyType
     Zombie,
     Gianthead,
     Goblin,
+    Skeleton,
     Boss
 }
 

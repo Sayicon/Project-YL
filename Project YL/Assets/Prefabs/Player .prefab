@@ -167,7 +167,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6622722181162834649}
   - component: {fileID: 6427759622044421465}
-  - component: {fileID: 6501958957158679365}
+  - component: {fileID: 1297003307357531008}
   - component: {fileID: 5117064758089932469}
   - component: {fileID: 4101224612825333949}
   m_Layer: 0
@@ -224,7 +224,7 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 5829211712280852114}
---- !u!114 &6501958957158679365
+--- !u!114 &1297003307357531008
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -233,17 +233,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 5363485657487054001}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 180d89d34586a8d4cab04746d24b82c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c8790ee153ba5b4ca0ee4b9283434dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 5363485657487054001}
-  playerModel: {fileID: 5913972157995168159}
+  weapons: []
+  characterConfig: {fileID: 11400000, guid: 2650572221362e54093a15244af6b274, type: 2}
+  playerModelObject: {fileID: 5913972157995168159}
+  groundTags:
+  - Ground
+  animator: {fileID: 0}
   moveSpeed: 8
   rotationSpeed: 10
   acceleration: 4
   jumpForce: 5
-  groundTags:
-  - Ground
+  denemeWeapons:
+  - {fileID: 11400000, guid: 456de7978e13e904784ace6ce0132707, type: 2}
+  - {fileID: 11400000, guid: 348f61110b00fec4e9a633cfe03529c7, type: 2}
 --- !u!136 &5117064758089932469
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -305,7 +310,7 @@ GameObject:
   - component: {fileID: 3506934181964011255}
   m_Layer: 0
   m_Name: Model
-  m_TagString: Untagged
+  m_TagString: PlayerModel
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -376,7 +381,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
       propertyPath: m_Name
-      value: character-j
+      value: policeman
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e5f169fd57b69b6489f2fdaebe0baca5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

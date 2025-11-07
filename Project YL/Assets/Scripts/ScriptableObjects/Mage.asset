@@ -20,6 +20,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   hasGold: 0
   characterType: 2
+  characterImage: {fileID: 0}
   projectileCount: 10
   maxHealth: 100
   attackDamage:

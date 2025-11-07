@@ -6,63 +6,78 @@ using UnityEngine.InputSystem;
 
 public class Player : Creature
 {
+    public static event System.Action OnPlayerDied;
+
     [Header("Character Requeriments")]
     [SerializeField] List<Weapon> weapons;
     [SerializeField] private CharacterConfigSO characterConfig;
     [SerializeField] private GameObject playerModelObject;
-    [SerializeField] private List<string> groundTags; // Editörden tag'leri seçmek için
     private Rigidbody rb;
-    [SerializeField] private Animator animator; //Animasyonlar eklenince serileştirme kaldırılcak
+    [SerializeField] private Animator animator;
 
-    [Header("Player Movement Settings")] //ilerde serileştirilemez olcak
-    [Range(0, 20f)][SerializeField] private float moveSpeed = 5f;
+    [Header("Player Movement Settings")]
     [Range(0, 20f)][SerializeField] private float rotationSpeed = 10f;
     [SerializeField, Range(1f, 200f)] private float acceleration = 50f;
     [Range(0, 100f)][SerializeField] private float jumpForce = 5f;
     private Vector2 moveInput;
     private bool isGrounded = true;
 
-    // Base Stats
+    [Header("Ground Check Settings")]
+    [SerializeField] private Vector3 groundCheckOffset = new Vector3(0, -1, 0);
+    [SerializeField] private float groundCheckRadius = 0.4f;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float coyoteTime = 0.2f;
+    private float coyoteTimeCounter;
+
+    [Header("Jump Settings")]
+    [SerializeField] private float jumpCooldown = 0.5f;
+    private float lastJumpTime;
+
     private Stat projectileScale;
     private Stat collectionRange;
     private Stat chance;
     private int hasGold;
+    private Sprite characterImage;
+    private Dictionary<int, float> enemyLastAttackTimes = new Dictionary<int, float>();
 
-    // Config Stats
     private eCharacter characterType;
     private Stat helathRegen;
     private int projectileCount;
     private Stat attackRange;
 
-    /* Config eklenicekler
-        [] - Karakter resmi ui için
-        [x] - Wapon[] weapons; //başlangıçta 1 tane 
-        [] - Tome[] tomes; //başlangıçta yok
-        [] - SpecialItem[] specialItems; //başlangıçta yok
-        [x] - Animator animator;
-        [x] - private List<string> groundTags;
-        [x] - private GameObject playerModel;
-    */
-
     [SerializeField] Weapon[] denemeWeapons;
     int deneme;
 
-
-    //----
+    // UI bağlantısı
+    private UiManager uiManager;
 
     void Awake()
     {
         InitPlayer(characterConfig);
+
+        // Sahnedeki UiManager'ı otomatik bul
+        uiManager = FindFirstObjectByType<UiManager>();
+        if (uiManager == null)
+            Debug.LogWarning("UiManager sahnede bulunamadı! HP güncellenmeyecek.");
+        else
+            uiManager.SetHealth(health, maxHealth);
     }
+
     void FixedUpdate()
     {
         if (rb == null) return;
         PlayerMovment();
+        CheckGroundStatus();
     }
 
-	void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.G) && denemeWeapons[deneme] != null)
+    void Update()
+    {
+        if (isGrounded)
+            coyoteTimeCounter = coyoteTime;
+        else
+            coyoteTimeCounter -= Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.G) && denemeWeapons[deneme] != null)
         {
             AddWeaponToInventory(denemeWeapons[deneme]);
             deneme++;
@@ -70,59 +85,60 @@ public class Player : Creature
 
         if (Input.GetKeyDown(KeyCode.H))
         {
-            // Silah tetik testi
             if (weapons.Count > 0)
-            {
-                Debug.Log("AttackRange: " + AttackRange.TotalValue);
                 weapons[0].SetFiring(true, this);
-                Debug.Log("test");
-			}
         }
-	}
+    }
 
-	public void OnMove(InputValue value)
+    public void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
     }
 
-    // Zıplama fonksiyonu
     public void OnJump(InputValue value)
     {
-        if (value.isPressed && isGrounded)
+        if (value.isPressed && coyoteTimeCounter > 0f && Time.time > lastJumpTime + jumpCooldown)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            coyoteTimeCounter = 0f;
+            lastJumpTime = Time.time;
         }
     }
 
     public void AddWeaponToInventory(Weapon weapon)
-	{
+    {
         if (weapon == null) return;
         weapons.Add(weapon);
-
         weapon.SetFiring(true, this);
-        Debug.Log($"Yeni silah eklendi: {weapon.WeaponName}"); 
-	}
+        Debug.Log($"Yeni silah eklendi: {weapon.WeaponName}");
+    }
 
     void InitPlayer(CharacterConfigSO characterConfig)
     {
         rb = GetComponent<Rigidbody>();
         if (rb == null)
             Debug.LogError("Rigidbody component not found on the player GameObject.");
+
         if (characterConfig != null)
         {
             creatureName = characterConfig.CreatureName;
             creatureType = characterConfig.CreatureType;
+
             if (characterConfig.Model != null)
             {
-                model = Instantiate(original: characterConfig.Model, position: playerModelObject.transform.position - Vector3.up,
-                        rotation: Quaternion.Euler(0, 0, 0), parent: playerModelObject.transform);
+                model = Instantiate(original: characterConfig.Model,
+                    position: playerModelObject.transform.position - Vector3.up,
+                    rotation: Quaternion.identity,
+                    parent: playerModelObject.transform);
             }
-            groundTags = characterConfig.GroundTags;
+
             animator = characterConfig.Animator;
             hasGold = characterConfig.HasGold;
             characterType = characterConfig.CharacterType;
+            characterImage = characterConfig.CharacterImage;
             projectileCount = characterConfig.ProjectileCount;
             maxHealth = characterConfig.MaxHealth;
+            health = maxHealth;
             attackDamage = characterConfig.AttackDamage;
             movementSpeed = characterConfig.MovementSpeed;
             attackSpeed = characterConfig.AttackSpeed;
@@ -139,7 +155,6 @@ public class Player : Creature
 
             creatureName = "Default Adventurer";
             creatureType = eCreatureType.Player;
-            groundTags = new List<string> { "Ground", "Platform" };
             animator = GetComponent<Animator>();
             hasGold = 0;
             characterType = eCharacter.Warrior;
@@ -156,7 +171,7 @@ public class Player : Creature
             helathRegen = new Stat(0.5f, 1f);
         }
     }
-    
+
     public override void RecalculateStats()
     {
         attackDamage.Recalculate();
@@ -167,19 +182,16 @@ public class Player : Creature
         chance.Recalculate();
         attackRange.Recalculate();
         helathRegen.Recalculate();
-        //devamı da  TODO
     }
 
     void PlayerMovment()
     {
-        // Kameraya göre hareket yönünü hesapla
         Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0f, Camera.main.transform.forward.z).normalized;
         Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0f, Camera.main.transform.right.z).normalized;
 
         Vector3 inputDir = cameraForward * moveInput.y + cameraRight * moveInput.x;
         Vector3 desiredVelocity = inputDir * movementSpeed.TotalValue;
 
-        // Haraket
         Vector3 currentVel = rb.linearVelocity;
         Vector3 velChange = desiredVelocity - new Vector3(currentVel.x, 0f, currentVel.z);
         Vector3 force = velChange * acceleration;
@@ -227,25 +239,41 @@ public class Player : Creature
             targetRotation,
             Time.deltaTime * rotationSpeed
         );
-}
-    
-    void OnCollisionEnter(Collision collision)
-    {
-        if (groundTags.Contains(collision.gameObject.tag))
-        {
-            isGrounded = true;
-        }
     }
 
-    void OnCollisionExit(Collision collision)
+    private void CheckGroundStatus()
     {
-        if (groundTags.Contains(collision.gameObject.tag))
-        {
-            isGrounded = false;
-        }
+        isGrounded = Physics.CheckSphere(transform.position + groundCheckOffset, groundCheckRadius, groundLayer);
     }
 
-    //Geter Sters
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position + groundCheckOffset, groundCheckRadius);
+    }
+
+    public override void TakeDamage(float amount)
+    {
+        base.TakeDamage(amount);
+        Debug.Log($"Player health: {health}/{maxHealth}");
+
+        // Can UI'sini güncelle
+        if (uiManager != null)
+            uiManager.SetHealth(health, maxHealth);
+    }
+
+    public override void Die()
+    {
+        OnPlayerDied?.Invoke();
+
+        CameraController cameraController = Camera.main.GetComponent<CameraController>();
+        if (cameraController != null)
+            cameraController.OnPlayerDeath();
+
+        base.Die();
+        Debug.Log("GAME OVER");
+    }
+
     public eCharacter CharacterType { get => characterType; set => characterType = value; }
     public int HasGold { get => hasGold; set => hasGold = value; }
     public int ProjectileCount { get => projectileCount; set => projectileCount = value; }
@@ -254,6 +282,4 @@ public class Player : Creature
     public Stat CollectionRange { get => collectionRange; set => collectionRange = value; }
     public Stat HelathRegen { get => helathRegen; set => helathRegen = value; }
     public Stat Chance { get => chance; set => chance = value; }
-
-	
 }

@@ -19,7 +19,7 @@ MonoBehaviour:
   enemyType: 0
   climbableLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 576
   level: 0
   maxHealth: 0
   givenXp: 0
@@ -37,4 +37,4 @@ MonoBehaviour:
     multiplier: 0
     total: 0
   animatorController: {fileID: 0}
-  model: {fileID: 0}
+  model: {fileID: 919132149155446097, guid: 3389b1cefe1581f49b99b39af46803da, type: 3}

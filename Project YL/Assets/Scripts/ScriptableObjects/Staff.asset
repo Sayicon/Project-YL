@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2598f9a9d1c98d744a68fb45c2393a2c, type: 3}
+  m_Name: Staff
+  m_EditorClassIdentifier: 
+  weaponName: Staff
+  resim: {fileID: 0}
+  attackDamage:
+    baseValue: 4
+    multiplier: 1
+    total: 4
+  attackRange:
+    baseValue: 10
+    multiplier: 1
+    total: 10
+  size:
+    baseValue: 2
+    multiplier: 1
+    total: 2
+  attackSpeed:
+    baseValue: 1
+    multiplier: 1
+    total: 1
+  explosionVFXPrefab: {fileID: 100014, guid: 5332791ebce075d4a9e56f4581e7fb47, type: 3}
+  projectilePrefab: {fileID: 0}
+  isAreaOfEffect: 1
+  projectileDelay: 0.1
