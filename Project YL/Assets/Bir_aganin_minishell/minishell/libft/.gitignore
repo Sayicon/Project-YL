@@ -1,7 +1,0 @@
-*.o
-main.out
-a.out
-*.swp
-*.a
-*.tests
-obj/
