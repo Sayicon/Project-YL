@@ -14,6 +14,9 @@ public class CameraController : MonoBehaviour
     private float pitch = 0f; // Dikey eksen (X) dönüşü
     private float yaw = 0f;   // Yatay eksen (Y) dönüşü
 
+    private bool isPlayerDead = false;
+    private Vector3 lastPlayerPosition;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked; // Fareyi kilitle
@@ -21,6 +24,21 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
+        if (isPlayerDead)
+        {
+            // Oyuncu öldüğünde, son bilinen pozisyon etrafında dön
+            yaw += Input.GetAxis("Mouse X") * sensitivityX * 100f * Time.deltaTime;
+            pitch -= Input.GetAxis("Mouse Y") * sensitivityY * 100f * Time.deltaTime;
+            pitch = Mathf.Clamp(pitch, verticalClamp.x, verticalClamp.y);
+
+            Quaternion rotation = Quaternion.Euler(pitch, yaw, 0f);
+            transform.position = lastPlayerPosition - (rotation * Vector3.forward * distanceFromPlayer);
+            transform.LookAt(lastPlayerPosition);
+            return;
+        }
+
+        if (player == null) return;
+
         // Fare hareketlerini al
         float mouseX = Input.GetAxis("Mouse X") * sensitivityX * 100f * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * sensitivityY * 100f * Time.deltaTime;
@@ -58,5 +76,12 @@ public class CameraController : MonoBehaviour
         }
         // Kamerayı oyuncuya çevir
         transform.LookAt(player.position + Vector3.up * 1.5f); // Oyuncunun biraz yukarısına bak
+    }
+
+    public void OnPlayerDeath()
+    {
+        isPlayerDead = true;
+        lastPlayerPosition = player.position;
+        transform.parent = null;
     }
 }

@@ -12,11 +12,12 @@ GameObject:
   - component: {fileID: 2941199872664454064}
   - component: {fileID: 8979285387773853615}
   - component: {fileID: 4755848324497205865}
+  - component: {fileID: 6610811977255858188}
   - component: {fileID: 1868977664463852829}
   - component: {fileID: 6094614723957475988}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,7 +98,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 535140262553527146}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7445408e66c29de4d99a19d2472b3349, type: 3}
   m_Name: 
@@ -110,6 +111,30 @@ MonoBehaviour:
   dummyRenderer: {fileID: 8979285387773853615}
   damageColor: {r: 1, g: 1, b: 1, a: 1}
   damageEffectDuration: 0.2
+--- !u!114 &6610811977255858188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 535140262553527146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8853c4a9d47d1d044b78e0644a9fbf46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chase: 0
+  climbableLayer:
+    serializedVersion: 2
+    m_Bits: 576
+  climbForce: 20
+  wallCheckDistance: 1
+  enemyConfig: {fileID: 11400000, guid: 65c5a23a0afb6914ba5f3bf3a2c9b7ea, type: 2}
+  eliteHealthMultiplier: 2.5
+  eliteDamageMultiplier: 2
+  eliteScaleMultiplier: 1.25
+  damageColor: {r: 1, g: 1, b: 1, a: 1}
+  damageEffectDuration: 0.2
 --- !u!136 &1868977664463852829
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -117,7 +142,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 535140262553527146}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: b640810d922e0eb47ab4005d87c67b8d, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -141,7 +166,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 535140262553527146}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -169,7 +194,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1507329838361822224}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Dummy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -292,9 +317,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7425829748484176536, guid: 5d4626429d5db3d4fa370b1ca5c46595, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7425829748484176538, guid: 5d4626429d5db3d4fa370b1ca5c46595, type: 3}
       propertyPath: m_Name
       value: Health Bar Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7425829748484176538, guid: 5d4626429d5db3d4fa370b1ca5c46595, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7425829748773275146, guid: 5d4626429d5db3d4fa370b1ca5c46595, type: 3}
       propertyPath: healthText
@@ -304,6 +337,14 @@ PrefabInstance:
       propertyPath: characterName
       value: Dummy
       objectReference: {fileID: 0}
+    - target: {fileID: 7425829748773275150, guid: 5d4626429d5db3d4fa370b1ca5c46595, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7425829749542601260, guid: 5d4626429d5db3d4fa370b1ca5c46595, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 7425829749752626982, guid: 5d4626429d5db3d4fa370b1ca5c46595, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -311,6 +352,14 @@ PrefabInstance:
     - target: {fileID: 7425829749752626982, guid: 5d4626429d5db3d4fa370b1ca5c46595, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7425829749752626985, guid: 5d4626429d5db3d4fa370b1ca5c46595, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8143852747427935619, guid: 5d4626429d5db3d4fa370b1ca5c46595, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

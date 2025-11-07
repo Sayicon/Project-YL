@@ -31,7 +31,9 @@ public class Projectile : MonoBehaviour
         if (target != null)
         {
             target.TakeDamage(damage);
+            AudioManager.PlayShuriken(); // vurunca shuriken sesi çal
             Destroy(gameObject);
         }
     }
+
 }

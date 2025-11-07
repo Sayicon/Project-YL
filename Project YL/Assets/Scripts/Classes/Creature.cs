@@ -3,6 +3,7 @@ using UnityEngine;
 
 public abstract class Creature : MonoBehaviour
 {
+    public static event System.Action<GameObject> OnCreatureDied;
 
     // Base Stats
     protected int level;
@@ -40,6 +41,7 @@ public abstract class Creature : MonoBehaviour
 
     public virtual void Die()
     {
+        OnCreatureDied?.Invoke(gameObject);
         Debug.Log(name + " has Died");
         gameObject.SetActive(false);
     }

@@ -23,14 +23,13 @@ MonoBehaviour:
     multiplier: 1
     total: 10
   size:
-    baseValue: 1
+    baseValue: 5
     multiplier: 1
-    total: 1
+    total: 5
   attackSpeed:
     baseValue: 1
     multiplier: 1
     total: 1
   projectilePrefab: {fileID: 6363718995935690019, guid: c817f70a1a615bb4b95fa9af83dd22dc, type: 3}
-  isAOE: 0
-  aoeRadius: 2
+  isAreaOfEffect: 0
   projectileDelay: 0.1

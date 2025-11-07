@@ -12,6 +12,7 @@ public class CharacterConfigSO : ScriptableObject
 	[SerializeField] private Animator animator;
     [SerializeField] private int hasGold;
     [SerializeField] private eCharacter characterType;
+	[SerializeField] private Sprite characterImage;
 	
 	[SerializeField] private int projectileCount;
 	[SerializeField] private float maxHealth;
@@ -41,6 +42,7 @@ public class CharacterConfigSO : ScriptableObject
 	public Stat Chance => chance;
 	public int HasGold => hasGold;
 	public eCharacter CharacterType => characterType;
+	public Sprite CharacterImage => characterImage;
 	public Stat HelathRegen => helathRegen;
 	public int ProjectileCount => projectileCount;
 	public Stat AttackRange => attackRange;
