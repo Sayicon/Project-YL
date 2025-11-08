@@ -1,0 +1,1973 @@
+using UnityEngine;
+using System.Collections.Generic;
+
+[System.Serializable]
+public class EnemySpawn
+{
+    public EnemyConfigSO enemyConfig;
+    [Range(0f, 1f)] public float spawnChance;
+}
+
+[System.Serializable]
+public class Wave
+{
+    public string waveName;
+    public float duration;
+    public List<EnemySpawn> enemySpawns;
+    public float spawnInterval;
+}
+
+public class WaveManager : MonoBehaviour
+{
+    public static WaveManager Instance { get; private set; }
+
+    [Header("Wave Configuration")]
+    [SerializeField] private List<Wave> waves;
+    [SerializeField] private int maxConcurrentEnemies = 50;
+
+    [Header("Spawn Configuration")]
+    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private float minSpawnRadius = 10f;
+    [SerializeField] private float maxSpawnRadius = 20f;
+    [SerializeField, Range(0f, 1f)] private float eliteChance = 0.1f;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask obstacleLayer;
+    [SerializeField] private float minSpawnClearanceRadius = 1.5f;
+
+
+    private int currentWaveIndex = 0;
+    private float waveTimer;
+    private float spawnTimer;
+    private Transform playerTransform;
+    private List<GameObject> activeEnemies = new List<GameObject>();
+    private Dictionary<EnemyConfigSO, List<GameObject>> enemyPool = new Dictionary<EnemyConfigSO, List<GameObject>>();
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+
+        Creature.OnCreatureDied += HandleCreatureDeath;
+    }
+
+    private void OnDestroy()
+    {
+        Creature.OnCreatureDied -= HandleCreatureDeath;
+    }
+
+    private void HandleCreatureDeath(GameObject creature)
+    {
+        if (activeEnemies.Contains(creature))
+        {
+            activeEnemies.Remove(creature);
+        }
+    }
+
+    private void Update()
+    {
+        if (currentWaveIndex >= waves.Count) return; // All waves completed
+
+        waveTimer += Time.deltaTime;
+        spawnTimer += Time.deltaTime;
+
+        Wave currentWave = waves[currentWaveIndex];
+
+        if (spawnTimer >= currentWave.spawnInterval)
+        {
+            spawnTimer = 0f;
+            if (activeEnemies.Count < maxConcurrentEnemies)
+            {
+                SpawnEnemy(currentWave);
+            }
+        }
+
+        if (waveTimer >= currentWave.duration)
+        {
+            waveTimer = 0f;
+            currentWaveIndex++;
+        }
+    }
+
+    private void SpawnEnemy(Wave wave)
+    {
+        Vector3 spawnPosition = GetSpawnPosition();
+        if (spawnPosition == Vector3.zero) return; // No valid spawn position found
+
+        EnemyConfigSO selectedEnemyConfig = GetRandomEnemy(wave);
+        if (selectedEnemyConfig == null) return;
+
+        GameObject enemyObject = GetEnemyFromPool(selectedEnemyConfig);
+        if (enemyObject == null) return;
+
+        enemyObject.transform.position = spawnPosition;
+        enemyObject.transform.rotation = Quaternion.identity;
+        enemyObject.SetActive(true);
+
+        // Fizik motorunu resetle
+        Rigidbody rb = enemyObject.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+
+        Enemy enemy = enemyObject.GetComponent<Enemy>();
+        if (enemy != null)
+        {
+            bool isElite = Random.value < eliteChance;
+            enemy.SetElite(isElite);
+            enemy.InitEnemyConfig(selectedEnemyConfig);
+        }
+
+        activeEnemies.Add(enemyObject);
+    }
+
+    private GameObject GetEnemyFromPool(EnemyConfigSO config)
+    {
+        if (enemyPool.ContainsKey(config))
+        {
+            foreach (var enemy in enemyPool[config])
+            {
+                if (!enemy.activeInHierarchy)
+                {
+                    return enemy;
+                }
+            }
+        }
+
+        GameObject newEnemy = Instantiate(enemyPrefab);
+        if (!enemyPool.ContainsKey(config))
+        {
+            enemyPool[config] = new List<GameObject>();
+        }
+        enemyPool[config].Add(newEnemy);
+        return newEnemy;
+    }
+
+    private EnemyConfigSO GetRandomEnemy(Wave wave)
+    {
+        float totalChance = 0f;
+        foreach (var enemySpawn in wave.enemySpawns)
+        {
+            totalChance += enemySpawn.spawnChance;
+        }
+
+        float randomValue = Random.Range(0, totalChance);
+        float cumulativeChance = 0f;
+        foreach (var enemySpawn in wave.enemySpawns)
+        {
+            cumulativeChance += enemySpawn.spawnChance;
+            if (randomValue <= cumulativeChance)
+            {
+                return enemySpawn.enemyConfig;
+            }
+        }
+
+        return null;
+    }
+
+    private Vector3 GetSpawnPosition()
+    {
+        for (int i = 0; i < 30; i++) // Try 30 times to find a valid position
+        {
+            Vector2 randomCircle = Random.insideUnitCircle.normalized * Random.Range(minSpawnRadius, maxSpawnRadius);
+            Vector3 potentialPosition = playerTransform.position + new Vector3(randomCircle.x, 0, randomCircle.y);
+
+            // Raycast down to find the ground
+            if (Physics.Raycast(potentialPosition + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100f, groundLayer))
+            {
+                // Check for obstacles at the spawn point and other enemies
+                if (!Physics.CheckSphere(hit.point, minSpawnClearanceRadius, obstacleLayer))
+                {
+                    // Also check if there are any active enemies too close
+                    bool tooCloseToOtherEnemies = false;
+                    foreach (GameObject enemy in activeEnemies)
+                    {
+                        if (enemy.activeSelf && Vector3.Distance(hit.point, enemy.transform.position) < minSpawnClearanceRadius)
+                        {
+                            tooCloseToOtherEnemies = true;
+                            break;
+                        }
+                    }
+
+                    if (!tooCloseToOtherEnemies)
+                    {
+                        return hit.point;
+                    }
+                }
+            }
+        }
+
+        return Vector3.zero; // Return zero vector if no valid position is found
+    }
+}
+
+
+
+
+using UnityEngine;
+using TMPro;
+
+public class UiManager : MonoBehaviour
+{
+    [SerializeField] private TextMeshProUGUI canText;
+
+    // Can değerlerini güncelleyen fonksiyon
+    public void SetHealth(float currentHp, float maxHp)
+    {
+        if (canText == null)
+        {
+            Debug.LogWarning("UiManager: canText atanmadı!");
+            return;
+        }
+
+        currentHp = Mathf.Clamp(currentHp, 0, maxHp);
+        canText.text = $"{currentHp}/{maxHp}";
+    }
+}
+
+
+using UnityEngine;
+
+public class PortalSpawner : MonoBehaviour
+{
+      
+    public Transform[] spawnPoints;
+    public GameObject objectToSpawn;
+    public Transform generatedObjectsParent;
+
+    void Start()
+    {
+        if (spawnPoints.Length == 0 || objectToSpawn == null)
+        {
+            Debug.LogWarning("Spawn point veya prefab atanmamış!");
+            return;
+        }
+
+        if (generatedObjectsParent == null)
+        {
+            Debug.LogWarning("Generated Objects Parent atanmamış! " +
+                             "Obje Hiyerarşi'nin ana dizinine doğacak.");
+        }
+        int spawnPointIndex = Random.Range(0, spawnPoints.Length);
+
+        Transform chosenSpawnPoint = spawnPoints[spawnPointIndex];
+
+        Instantiate(objectToSpawn, chosenSpawnPoint.position, chosenSpawnPoint.rotation, generatedObjectsParent);
+    }
+  
+}
+
+
+
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerController : MonoBehaviour
+{
+    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject playerModel;
+    private Rigidbody rb;
+
+    [Header("Player Movement Settings")]
+    [Range(0, 20f)][SerializeField] private float moveSpeed = 5f;
+    [Range(0, 20f)][SerializeField] private float rotationSpeed = 10f;
+    [SerializeField, Range(1f, 200f)] private float acceleration = 50f;
+    [Range(0, 100f)][SerializeField] private float jumpForce = 5f;
+    private Vector2 moveInput;
+    private bool isGrounded = true;
+
+    [Header("Ground Tags")]
+    [SerializeField] private List<string> groundTags; // Editörden tag'leri seçmek için
+
+    void Awake()
+    {
+        if (player != null)
+        {
+            rb = player.GetComponent<Rigidbody>();
+            if (rb == null)
+                Debug.LogError("Rigidbody component not found on the player GameObject.");
+        }
+        else
+            Debug.Log("Player GameObject is not assigned in the inspector.");
+    }
+    void FixedUpdate()
+    {
+        if (rb == null) return;
+        PlayerMovment();
+    }
+
+    public void OnMove(InputValue value)
+    {
+        moveInput = value.Get<Vector2>();
+    }
+
+    // Zıplama fonksiyonu
+    public void OnJump(InputValue value)
+    {
+        if (value.isPressed && isGrounded)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    void PlayerMovment()
+    {
+        // Kameraya göre hareket yönünü hesapla
+        Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0f, Camera.main.transform.forward.z).normalized;
+        Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0f, Camera.main.transform.right.z).normalized;
+
+        Vector3 inputDir = cameraForward * moveInput.y + cameraRight * moveInput.x;
+        Vector3 desiredVelocity = inputDir * moveSpeed;
+
+        // Haraket
+        Vector3 currentVel = rb.linearVelocity;
+        Vector3 velChange = desiredVelocity - new Vector3(currentVel.x, 0f, currentVel.z);
+        Vector3 force = velChange * acceleration;
+        rb.AddForce(force, ForceMode.Acceleration);
+        RotateModel(inputDir);
+    }
+
+    public void RotateModel(Vector3? dir = null, bool cameraRelativeIfNull = true)
+    {
+        Vector3 inputDir;
+
+        if (dir.HasValue)
+        {
+            inputDir = dir.Value;
+        }
+        else
+        {
+            Vector3 raw = new Vector3(moveInput.x, 0f, moveInput.y);
+            if (raw.sqrMagnitude < 0.0001f) return;
+
+            if (cameraRelativeIfNull && Camera.main != null)
+            {
+                Vector3 camF = Camera.main.transform.forward;
+                camF.y = 0f;
+                camF.Normalize();
+
+                Vector3 camR = Camera.main.transform.right;
+                camR.y = 0f;
+                camR.Normalize();
+
+                inputDir = camF * raw.z + camR * raw.x;
+            }
+            else
+            {
+                inputDir = raw;
+            }
+        }
+
+        inputDir.y = 0f;
+        if (inputDir.sqrMagnitude < 0.0001f) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(inputDir.normalized, Vector3.up);
+        playerModel.transform.rotation = Quaternion.Slerp(
+            playerModel.transform.rotation,
+            targetRotation,
+            Time.deltaTime * rotationSpeed
+        );
+}
+    
+    void OnCollisionEnter(Collision collision)
+    {
+        if (groundTags.Contains(collision.gameObject.tag))
+        {
+            isGrounded = true;
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (groundTags.Contains(collision.gameObject.tag))
+        {
+            isGrounded = false;
+        }
+    }
+
+}
+
+
+
+
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class MainMenu : MonoBehaviour
+{
+    public void PlayGame()
+    {
+        SceneManager.LoadSceneAsync(1);
+    }
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+}
+
+
+
+using UnityEngine;
+
+public class LevelGeneration : MonoBehaviour
+{
+    public GameObject[] objects;
+    void Start()
+    {
+        int rand = Random.Range(0, objects.Length);
+        Instantiate(objects[rand], transform.position, Quaternion.identity);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}
+
+
+using UnityEngine;
+
+public class GridGeneration : MonoBehaviour
+{
+    public GameObject blockGameObject;
+
+    //x ve z ekseninde kac tane block ekleyeceğimizi seciyoruz. 
+    private int worldSizeX = 50;
+
+    private int worldSizeZ = 50;
+
+    private float noiseHeight = 8f;
+
+    private float gridOffset = 2f;
+
+    void Start() //başlangıçta oluşturması icin startın icine yazıyoruz.
+    {
+        //bu iç içe 2 for kullanarak x*ylik bir alan olusturmus oluyoruz.
+        for (int x = 0; x < worldSizeX; x++)
+        {
+            for (int z = 0; z < worldSizeZ; z++)
+            {
+                Vector3 pos = new Vector3(
+                    x * gridOffset,
+                    generateNoise(x, z, 8f) * noiseHeight,
+                    z * gridOffset);
+                GameObject block = Instantiate(blockGameObject,
+                    pos,
+                    Quaternion.identity) as GameObject;
+
+                block.transform.SetParent(this.transform);
+            }
+        }
+    }
+
+    private float generateNoise(int x, int z, float detailScale)
+    {
+        float xNoise = (x + this.transform.position.x) / detailScale;
+        float zNoise = (z + this.transform.position.z) / detailScale;
+        return Mathf.PerlinNoise(xNoise, zNoise);
+    }
+}
+
+
+
+using System.Collections;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class DummyScript : MonoBehaviour
+{
+    Enemy enemy;
+    [Header("Chase Settings")]
+    public bool canChase = false; // Checkbox to enable/disable chasing
+    public Transform target; // Target to chase
+    public float chaseSpeed = 3f;
+
+    [Header("Health Settings")]
+    public int maxHealth = 100;
+    private int currentHealth;
+    public HealthBar healthBar; // Reference to the HealthBar script
+
+    [Header("Damage Feedback")]
+    public Renderer dummyRenderer; // Renderer for visual feedback
+    public Color damageColor = Color.white;
+    public float damageEffectDuration = 0.2f;
+    private Rigidbody rb;
+
+    void Start()
+    {
+        // Initialize health
+        currentHealth = maxHealth;
+        enemy = GetComponent<Enemy>();
+        if (enemy != null)
+            InitDummy(enemy);
+        healthBar.SetMaxHealth(maxHealth);
+
+        //Playeri bul
+        target = GameObject.FindGameObjectWithTag("Player").transform;
+
+        // Cache Rigidbody
+        rb = GetComponent<Rigidbody>();
+    }
+
+    void InitDummy(Enemy enemy)
+    {
+        currentHealth = Mathf.RoundToInt(enemy.Health);
+        healthBar.SetMaxHealth(maxHealth);
+        healthBar.SetHealth(currentHealth);
+
+        chaseSpeed = enemy.MovementSpeed.TotalValue;
+    }
+
+
+    void Update()
+    {
+        //test damage
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            TakeDamage(10);
+        }
+        //test chase
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            canChase = !canChase;
+        }
+
+        // Handle chasing logic
+        if (canChase && target != null)
+        {
+            Vector3 direction = (target.position - transform.position).normalized;
+            rb.MovePosition(transform.position + direction * chaseSpeed * Time.deltaTime);
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        // Reduce health
+        currentHealth -= damage;
+        StartCoroutine(DamageEffect());
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        // Update health bar
+        healthBar.SetHealth(currentHealth);
+
+        // Trigger damage feedback
+        if (dummyRenderer != null && dummyRenderer.material != null)
+        {
+            StopAllCoroutines();
+            StartCoroutine(DamageFlash(dummyRenderer.material, damageColor, damageEffectDuration));
+        }
+
+        // Check if health is zero
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private IEnumerator DamageFlash(Material mat, Color flashColor, float duration)
+    {
+        mat.EnableKeyword("_EMISSION");
+
+        Color originalColor = mat.GetColor("_EmissionColor");
+        float timer = 0f;
+
+        // Parlamaya doğru geçiş
+        while (timer < duration / 2f)
+        {
+            timer += Time.deltaTime;
+            float t = timer / (duration / 2f);
+            mat.SetColor("_EmissionColor", Color.Lerp(originalColor, flashColor, t));
+            yield return null;
+        }
+
+        // Geri solma
+        timer = 0f;
+        while (timer < duration / 2f)
+        {
+            timer += Time.deltaTime;
+            float t = timer / (duration / 2f);
+            mat.SetColor("_EmissionColor", Color.Lerp(flashColor, originalColor, t));
+            yield return null;
+        }
+
+        mat.SetColor("_EmissionColor", originalColor);
+        mat.DisableKeyword("_EMISSION");
+    }
+
+
+    private IEnumerator DamageEffect()
+    {
+        if (dummyRenderer != null && dummyRenderer.material != null)
+        {
+            yield return DamageFlash(dummyRenderer.material, damageColor, damageEffectDuration);
+        }
+    }
+
+    private void Die()
+    {
+        // Handle death logic (e.g., disable the object, play animation, etc.)
+        Debug.Log("Dummy has died.");
+        gameObject.SetActive(false);
+    }
+}
+
+
+
+using UnityEngine;
+
+public class CameraController : MonoBehaviour
+{
+    public Transform player; // Player'ın referansı
+    [SerializeField][Range(0, 10f)] private float sensitivityX = 1f;
+    [SerializeField][Range(0, 10f)] private float sensitivityY = 1f; 
+
+    [Range(0, 10f)] public float lerpSens = 2f;
+    [Range(0, 10f)] public float mouseWhellSens = 1f;
+    [Range(0, 100f)] public float distanceFromPlayer = 5f; // Kamera ile oyuncu arasındaki mesafe
+    public Vector2 verticalClamp = new Vector2(-40f, 80f); // Dikey eksen sınırları
+
+    private float pitch = 0f; // Dikey eksen (X) dönüşü
+    private float yaw = 0f;   // Yatay eksen (Y) dönüşü
+
+    private bool isPlayerDead = false;
+    private Vector3 lastPlayerPosition;
+
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked; // Fareyi kilitle
+    }
+
+    void LateUpdate()
+    {
+        if (isPlayerDead)
+        {
+            // Oyuncu öldüğünde, son bilinen pozisyon etrafında dön
+            yaw += Input.GetAxis("Mouse X") * sensitivityX * 100f * Time.deltaTime;
+            pitch -= Input.GetAxis("Mouse Y") * sensitivityY * 100f * Time.deltaTime;
+            pitch = Mathf.Clamp(pitch, verticalClamp.x, verticalClamp.y);
+
+            Quaternion rotation = Quaternion.Euler(pitch, yaw, 0f);
+            transform.position = lastPlayerPosition - (rotation * Vector3.forward * distanceFromPlayer);
+            transform.LookAt(lastPlayerPosition);
+            return;
+        }
+
+        if (player == null) return;
+
+        // Fare hareketlerini al
+        float mouseX = Input.GetAxis("Mouse X") * sensitivityX * 100f * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * sensitivityY * 100f * Time.deltaTime;
+        float mouseWhell = Input.GetAxis("Mouse ScrollWheel") * mouseWhellSens * 100f * Time.deltaTime;
+    
+        // Yatay ve dikey dönüşleri hesapla
+        yaw += mouseX;
+        pitch -= mouseY;
+        pitch = Mathf.Clamp(pitch, verticalClamp.x, verticalClamp.y); // Dikey ekseni sınırla
+
+        // Kameranın dönüşünü ayarla
+        transform.rotation = Quaternion.Euler(pitch, yaw, 0f);
+
+        // Kamera pozisyonunu ayarla
+        distanceFromPlayer -= mouseWhell;
+        distanceFromPlayer = Mathf.Clamp(distanceFromPlayer, 3f, 15f); // Mesafeyi sınırla
+        Vector3 desiredPosition = Vector3.Lerp(transform.position, player.position - transform.forward * distanceFromPlayer, Time.deltaTime * 10f * lerpSens);
+        RaycastHit hit;
+    
+        if (Physics.Raycast(player.position, desiredPosition - player.position, out hit, distanceFromPlayer))
+        {
+            if (!hit.collider.CompareTag("Enemy") && !hit.collider.CompareTag("Projectile"))
+            {
+                Vector3 safePos = hit.point - (desiredPosition - player.position).normalized * 0.2f;
+                transform.position = safePos;
+            }
+            else
+            {
+                transform.position = desiredPosition;
+            }
+        }
+        else
+        {
+            transform.position = desiredPosition;
+        }
+        // Kamerayı oyuncuya çevir
+        transform.LookAt(player.position + Vector3.up * 1.5f); // Oyuncunun biraz yukarısına bak
+    }
+
+    public void OnPlayerDeath()
+    {
+        isPlayerDead = true;
+        lastPlayerPosition = player.position;
+        transform.parent = null;
+    }
+}
+
+
+
+using UnityEngine;
+using System.Collections.Generic;
+
+public class AudioManager : MonoBehaviour
+{
+    [Header("Music Settings")]
+    [SerializeField] private AudioSource musicSource;
+    [SerializeField] private AudioClip backgroundMusic;
+
+    [Header("SFX Settings")]
+    [SerializeField] private AudioClip explosionClip;
+    [SerializeField] private AudioClip shurikenClip;
+    [SerializeField] private int sfxPoolSize = 10;
+
+    private List<AudioSource> sfxPool;
+
+    private static AudioManager instance;
+
+    void Awake()
+    {
+        // Singleton kurulum (birden fazla AudioManager olmasın)
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        // SFX havuzu oluştur
+        sfxPool = new List<AudioSource>();
+        for (int i = 0; i < sfxPoolSize; i++)
+        {
+            AudioSource src = gameObject.AddComponent<AudioSource>();
+            src.playOnAwake = false;
+            sfxPool.Add(src);
+        }
+    }
+
+    void Start()
+    {
+        // Sahne başlar başlamaz müzik çalsın
+        if (backgroundMusic != null)
+        {
+            musicSource.clip = backgroundMusic;
+            musicSource.loop = true;
+            musicSource.Play();
+        }
+    }
+
+    private AudioSource GetAvailableSFXSource()
+    {
+        foreach (AudioSource src in sfxPool)
+        {
+            if (!src.isPlaying)
+                return src;
+        }
+
+        // Hiç boş yoksa, ilkini kullan (üst üste ses gerekirse)
+        return sfxPool[0];
+    }
+
+    public static void PlayExplosion()
+    {
+        if (instance == null) return;
+        instance.PlaySFX(instance.explosionClip);
+    }
+
+    public static void PlayShuriken()
+    {
+        if (instance == null) return;
+        instance.PlaySFX(instance.shurikenClip);
+    }
+
+    private void PlaySFX(AudioClip clip)
+    {
+        if (clip == null) return;
+
+        AudioSource src = GetAvailableSFXSource();
+        src.clip = clip;
+        src.volume = 0.3f;
+        src.pitch = Random.Range(0.95f, 1.05f); // küçük varyasyon doğal his verir
+        src.Play();
+    }
+}
+
+
+buradan itibaren: Classes
+
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "CharacterConfigSO", menuName = "New CharacterConfig")]
+public class CharacterConfigSO : ScriptableObject
+{
+    [SerializeField] private string creatureName;
+    [SerializeField] private eCreatureType creatureType;
+	[SerializeField] private GameObject model;
+	
+	[SerializeField] private List<string> groundTags;
+	[SerializeField] private Animator animator;
+    [SerializeField] private int hasGold;
+    [SerializeField] private eCharacter characterType;
+	[SerializeField] private Sprite characterImage;
+	
+	[SerializeField] private int projectileCount;
+	[SerializeField] private float maxHealth;
+	[SerializeField] private Stat attackDamage;
+    [SerializeField] private Stat movementSpeed;
+	[SerializeField] private Stat attackSpeed;
+	[SerializeField] private Stat projectileScale;
+    [SerializeField] private Stat collectionRange;
+	[SerializeField] private Stat chance;
+	[SerializeField] private Stat attackRange;
+	[SerializeField] private Stat helathRegen;
+
+	// Geters
+
+	public string CreatureName => creatureName;
+	public eCreatureType CreatureType => creatureType;
+	public float MaxHealth => maxHealth;
+	public Stat AttackDamage => attackDamage;
+	public Stat MovementSpeed => movementSpeed;
+	public Stat AttackSpeed => attackSpeed;
+	public GameObject Model => model;
+
+	public List<string> GroundTags => groundTags;
+	public Animator Animator => animator;
+	public Stat ProjectileScale => projectileScale;
+	public Stat CollectionRange => collectionRange;
+	public Stat Chance => chance;
+	public int HasGold => hasGold;
+	public eCharacter CharacterType => characterType;
+	public Sprite CharacterImage => characterImage;
+	public Stat HelathRegen => helathRegen;
+	public int ProjectileCount => projectileCount;
+	public Stat AttackRange => attackRange;
+
+}
+
+
+
+
+using Unity.Mathematics;
+using UnityEngine;
+
+public abstract class Creature : MonoBehaviour
+{
+    public static event System.Action<GameObject> OnCreatureDied;
+
+    // Base Stats
+    protected int level;
+
+    // Config Stats
+    protected string creatureName;
+    protected eCreatureType creatureType;
+    protected float health;
+    protected float maxHealth;
+    protected Stat attackDamage;
+    protected Stat movementSpeed;
+    protected Stat attackSpeed;
+    protected GameObject model;
+
+    public virtual void GiveDamage(Creature target)
+    {
+        if (target == null) return;
+        target.TakeDamage(attackDamage.TotalValue);
+    }
+
+    public virtual void TakeDamage(float amount)
+    {
+        health -= amount;
+        health = math.clamp(health, 0, maxHealth);
+        if (health <= 0)
+            Die();
+    }
+
+    public virtual void RecalculateStats()
+    {
+        attackDamage.Recalculate();
+        movementSpeed.Recalculate();
+        attackSpeed.Recalculate();
+    }
+
+    public virtual void Die()
+    {
+        OnCreatureDied?.Invoke(gameObject);
+        Debug.Log(name + " has Died");
+        gameObject.SetActive(false);
+    }
+    
+    //Geter Seters
+    public string CreatureName { get => creatureName; set => creatureName = value; }
+    public eCreatureType CreatureType { get => creatureType; set => creatureType = value; }
+    public int Level { get => level; set => level = value; }
+    public float Health { get => health; set => health = value; }
+    public float MaxHealth { get => maxHealth; set => maxHealth = value; }
+    public Stat AttackDamage { get => attackDamage; set => attackDamage = value; }
+    public Stat MovementSpeed { get => movementSpeed; set => movementSpeed = value; }
+    public Stat AttackSpeed { get => attackSpeed; set => attackSpeed = value; }
+    public GameObject Model { get => model; set => model = value; }
+
+}
+
+
+
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Mathematics;
+using UnityEditor.Animations;
+using UnityEngine;
+using UnityEngine.AI;
+
+public class Enemy : Creature
+{
+    [Header("Chasing Settings")]
+    [SerializeField] bool chase;
+    [SerializeField] LayerMask climbableLayer;
+    [SerializeField] float climbForce = 20f;
+    [SerializeField] float wallCheckDistance = 1f;
+    [SerializeField] private float rotationSpeed = 10f;
+
+    // stats
+    [SerializeField] protected EnemyConfigSO enemyConfig;
+    private bool isBoss;
+    private bool isElit;
+    private eEnemyType enemyType;
+    private float givenXp;
+    private float givenGold;
+
+    [Header("Elite Settings")]
+    private bool isElite = false;
+    [SerializeField] private float eliteHealthMultiplier = 2.5f;
+    [SerializeField] private float eliteDamageMultiplier = 2f;
+    [SerializeField] private float eliteScaleMultiplier = 1.25f;
+
+    // Script requariments
+    private Animator animator;
+    private Transform playerTransform;
+    private Rigidbody rb;
+
+    /*  Damage Feedback */
+    private Coroutine damageCoroutine;
+    private Renderer[] enemyRenderers; // Tekil yerine array kullanıyoruz
+    public Color damageColor = Color.white;
+    public float damageEffectDuration = 0.2f;
+
+    private float lastAttackTime;
+
+    void Awake()
+    {
+        Player.OnPlayerDied += HandlePlayerDeath;
+
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+
+        health = maxHealth;
+    }
+
+    void OnDestroy()
+    {
+        Player.OnPlayerDied -= HandlePlayerDeath;
+    }
+
+    void Update()
+    {
+        //test damage
+        if (Input.GetKeyDown(KeyCode.F)) TakeDamage(10);
+        //test chase
+        if (Input.GetKeyDown(KeyCode.C)) chase = !chase;
+        // Handle chasing logic
+    }
+
+    void FixedUpdate()
+    {
+        if (chase) ChasePlayer(playerTransform);
+    }
+
+    [SerializeField] private GameObject enemyModelObject;
+
+
+    private void OnEnable()
+    {
+        transform.rotation = Quaternion.identity;
+    }
+
+    public virtual void InitEnemyConfig(EnemyConfigSO enemyConfig)
+    {
+
+        if (enemyConfig != null)
+        {
+            chase = true;
+            climbableLayer = enemyConfig.ClimbableLayer;
+            creatureName = enemyConfig.EnemyName;
+            isBoss = enemyConfig.IsBoss;
+            isElit = enemyConfig.IsElit;
+            enemyType = enemyConfig.EnemyType;
+            givenXp = enemyConfig.GivenXp;
+            givenGold = enemyConfig.GivenGold;
+            if (animator != null) animator.runtimeAnimatorController = enemyConfig.AnimatorController;
+            creatureType = enemyConfig.CreatureType;
+            level = enemyConfig.Level;
+            maxHealth = enemyConfig.MaxHealth;
+            attackDamage = enemyConfig.AttackDamage;
+            movementSpeed = enemyConfig.MovementSpeed;
+            attackSpeed = enemyConfig.AttackSpeed;
+
+            if (enemyConfig.Model != null)
+            {
+                model = Instantiate(original: enemyConfig.Model, position: enemyModelObject.transform.position - Vector3.up,
+                        rotation: Quaternion.Euler(0, 0, 0), parent: enemyModelObject.transform);
+
+                // Tüm alt objelerdeki Renderer'ları bul
+                enemyRenderers = model.GetComponentsInChildren<Renderer>();
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"{name}: EnemyConfigSO atanmadi, varsayilan değerlerle başlatiliyor.");
+            chase = true;
+            climbableLayer = LayerMask.GetMask("Moovable");
+            isBoss = false;
+            isElit = false;
+            enemyType = eEnemyType.None;
+            givenXp = 10f;
+            givenGold = 5f;
+            creatureType = eCreatureType.Enemy;
+            level = 1;
+            health = maxHealth = 100f;
+            attackDamage = new Stat(10f, 1f);
+            movementSpeed = new Stat(3.5f, 1f);
+            attackSpeed = new Stat(1f, 1f);
+        }
+
+        RecalculateStats();
+        health = maxHealth;
+
+        if (isElite)
+        {
+            maxHealth *= eliteHealthMultiplier;
+            health = maxHealth;
+            attackDamage.BaseValue *= eliteDamageMultiplier;
+            transform.localScale *= eliteScaleMultiplier;
+        }
+    }
+
+    public void SetElite(bool isElite)
+    {
+        this.isElite = isElite;
+    }
+
+    public override void TakeDamage(float amount)
+    {
+        health -= amount;
+        health = math.clamp(health, 0, maxHealth);
+
+        // Eğer bu düşman Skeleton tipindeyse, ışık efektini atla
+        if (enemyType != eEnemyType.Skeleton)
+        {
+            if (damageCoroutine != null)
+                StopCoroutine(damageCoroutine);
+            damageCoroutine = StartCoroutine(DamageEffect());
+        }
+
+        if (health <= 0)
+            Die();
+    }
+
+
+    public void ChasePlayer(Transform target)
+    {
+        Vector3 direction = (target.position - transform.position).normalized;
+
+        // Duvar kontrolü
+        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, wallCheckDistance, climbableLayer))
+        {
+            if (Vector3.Dot(hit.normal, Vector3.up) < 0.5f)
+            {
+                // Yukarı doğru tırmanma kuvveti uygula
+                rb.AddForce(Vector3.up * climbForce, ForceMode.Acceleration);
+            }
+        }
+
+        // İleri hareket
+        rb.MovePosition(transform.position + direction * movementSpeed.TotalValue * Time.deltaTime);
+
+        // Oyuncuya doğru dönme
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        }
+    }
+
+    public void DropXp(float multiplier)
+    {
+        //enemy Drop xp
+    }
+
+    public void DropGold(float multiplier)
+    {
+        //enemy Drop gold
+    }
+
+    public void DropChest(float chance)
+    {
+        //Enemy drop chest // şans ile orantılı eşya nadirliği
+    }
+
+    public void Spawn(EnemyConfigSO enemyConfig, Vector3 spawnPos)
+    {
+        if (enemyConfig != null)
+            InitEnemyConfig(enemyConfig);
+        //spawn spawnPos // polingde obje varsa poolingden yoksa yeni create edicez
+    }
+
+    public override void Die()
+    {
+        if (damageCoroutine != null)
+            StopCoroutine(damageCoroutine);
+
+        ResetEmission(); // Call this before deactivating the GameObject
+
+        float xpMultiplier = isElite ? 2f : 1f;
+        float goldMultiplier = isElite ? 2f : 1f;
+
+        // Drop loot based on stats
+        DropXp(xpMultiplier);
+        DropGold(goldMultiplier);
+        if (isBoss || (isElite && UnityEngine.Random.value < 0.25f))
+        {
+            DropChest(1f);
+        }
+
+        if (isElite)
+        {
+            transform.localScale /= eliteScaleMultiplier;
+        }
+
+        base.Die();
+    }
+
+    private IEnumerator DamageFlash(Material mat, Color flashColor, float duration)
+    {
+        mat.EnableKeyword("_EMISSION");
+
+        Color originalColor = mat.GetColor("_EmissionColor");
+        float timer = 0f;
+
+        // Parlamaya doğru geçiş
+        while (timer < duration / 2f)
+        {
+            timer += Time.deltaTime;
+            float t = timer / (duration / 2f);
+            mat.SetColor("_EmissionColor", Color.Lerp(originalColor, flashColor, t));
+            yield return null;
+        }
+
+        // Geri solma
+        timer = 0f;
+        while (timer < duration / 2f)
+        {
+            timer += Time.deltaTime;
+            float t = timer / (duration / 2f);
+            mat.SetColor("_EmissionColor", Color.Lerp(flashColor, originalColor, t));
+            yield return null;
+        }
+
+        mat.SetColor("_EmissionColor", originalColor);
+        mat.DisableKeyword("_EMISSION");
+    }
+
+    private IEnumerator DamageEffect()
+    {
+        if (enemyRenderers != null && enemyRenderers.Length > 0)
+        {
+            // Tüm renderer'lar için coroutine'leri başlat
+            List<Coroutine> flashCoroutines = new List<Coroutine>();
+
+            foreach (Renderer renderer in enemyRenderers)
+            {
+                if (renderer != null && renderer.material != null)
+                {
+                    Coroutine flashCo = StartCoroutine(DamageFlash(renderer.material, damageColor, damageEffectDuration));
+                    flashCoroutines.Add(flashCo);
+                }
+            }
+
+            // Tüm efektlerin bitmesini bekle
+            yield return new WaitForSeconds(damageEffectDuration);
+        }
+    }
+
+    private void HandlePlayerDeath()
+    {
+        chase = false;
+        if (rb != null)
+        {
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+        }
+    }
+
+    void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            if (Time.time > lastAttackTime + (1f / attackSpeed.TotalValue))
+            {
+                Player player = collision.gameObject.GetComponent<Player>();
+                if (player != null)
+                {
+                    GiveDamage(player);
+                    lastAttackTime = Time.time;
+                }
+            }
+        }
+    }
+
+    //Geter Seters
+    public bool IsBoss { get => isBoss; set => isBoss = value; }
+    public bool IsElit { get => isElit; set => isElit = value; }
+    public eEnemyType EnemyType { get => enemyType; set => enemyType = value; }
+    public float GivenXp { get => givenXp; set => givenXp = value; }
+    public float GivenGold { get => givenGold; set => givenGold = value; }
+    public Animator Animator { get => animator; set => animator = value; }
+    public Transform PlayerTransform { get => playerTransform; set => playerTransform = value; }
+    public Rigidbody Rb { get => rb; set => rb = value; }
+
+    private void ResetEmission()
+    {
+        if (enemyRenderers == null || enemyRenderers.Length == 0) return;
+
+        foreach (var renderer in enemyRenderers)
+        {
+            if (renderer != null && renderer.material != null)
+            {
+                if (renderer.material.HasProperty("_EMISSION") && renderer.material.IsKeywordEnabled("_EMISSION"))
+                {
+                    renderer.material.DisableKeyword("_EMISSION");
+                    renderer.material.SetColor("_EmissionColor", Color.black); // Ensure it's fully off
+                }
+            }
+        }
+    }
+}
+
+
+
+using UnityEngine;
+
+[CreateAssetMenu(menuName ="New Enemy Config", fileName ="Enemy Config")]
+public class EnemyConfigSO : ScriptableObject
+{
+    [SerializeField] private string enemyName;
+    [SerializeField] private bool isBoss;
+    [SerializeField] private bool isElit;
+    [SerializeField] private eCreatureType creatureType;
+    [SerializeField] private eEnemyType enemyType;
+    [SerializeField] private LayerMask climbableLayer;
+    [SerializeField] private int level;
+    [SerializeField] private float maxHealth;
+    [SerializeField] private float givenXp;
+    [SerializeField] private float givenGold;
+    [SerializeField] private Stat attackDamage;
+    [SerializeField] private Stat movementSpeed;
+    [SerializeField] private Stat attackSpeed;
+    [SerializeField] private RuntimeAnimatorController animatorController;
+    [SerializeField] private GameObject model;
+
+    public LayerMask ClimbableLayer => climbableLayer;
+    public Stat AttackSpeed => attackSpeed;
+    public Stat MovementSpeed => movementSpeed;
+    public Stat AttackDamage => attackDamage;
+    public float MaxHealth => maxHealth;
+    public int Level => level;
+    public eCreatureType CreatureType => creatureType;
+    public string EnemyName => enemyName;
+    public GameObject Model => model;
+    public bool IsBoss => isBoss;
+    public bool IsElit => isElit;
+    public eEnemyType EnemyType => enemyType;
+    public float GivenXp => givenXp;
+    public float GivenGold => givenGold;
+    public RuntimeAnimatorController AnimatorController => animatorController;
+}
+
+
+
+
+using UnityEngine;
+
+
+[System.Serializable]
+public struct Stat
+{
+    [SerializeField] private float baseValue;
+    [SerializeField] private float multiplier;
+    [SerializeField] private float total;
+
+    public Stat(float baseValue, float multiplier)
+    {
+        this.baseValue = baseValue;
+        this.multiplier = multiplier;
+        this.total = baseValue * multiplier;
+    }
+
+
+    public float BaseValue
+    {
+        get => baseValue;
+        set { baseValue = value; Recalculate(); }
+    }
+
+    public float Multiplier
+    {
+        get => multiplier;
+        set { multiplier = value; Recalculate(); }
+    }
+
+    public float TotalValue
+	{
+        get => total;
+        set => total = value;
+	}
+
+    public void Recalculate()
+    {
+        total = baseValue * multiplier;
+    }
+}
+public enum eCreatureType
+{
+    None,
+    Player,
+    Enemy,
+}
+
+public enum eEnemyType
+{
+    None,
+    Zombie,
+    Gianthead,
+    Goblin,
+    Skeleton,
+    Boss
+}
+
+public enum eCharacter
+{
+    None,
+    Warrior,
+    Mage
+}
+
+
+
+
+
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class Player : Creature
+{
+    public static event System.Action OnPlayerDied;
+
+    [Header("Character Requeriments")]
+    [SerializeField] List<Weapon> weapons;
+    [SerializeField] private CharacterConfigSO characterConfig;
+    [SerializeField] private GameObject playerModelObject;
+    private Rigidbody rb;
+    [SerializeField] private Animator animator;
+
+    [Header("Player Movement Settings")]
+    [Range(0, 20f)][SerializeField] private float rotationSpeed = 10f;
+    [SerializeField, Range(1f, 200f)] private float acceleration = 50f;
+    [Range(0, 100f)][SerializeField] private float jumpForce = 5f;
+    private Vector2 moveInput;
+    private bool isGrounded = true;
+
+    [Header("Ground Check Settings")]
+    [SerializeField] private Vector3 groundCheckOffset = new Vector3(0, -1, 0);
+    [SerializeField] private float groundCheckRadius = 0.4f;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float coyoteTime = 0.2f;
+    private float coyoteTimeCounter;
+
+    [Header("Jump Settings")]
+    [SerializeField] private float jumpCooldown = 0.5f;
+    private float lastJumpTime;
+
+    private Stat projectileScale;
+    private Stat collectionRange;
+    private Stat chance;
+    private int hasGold;
+    private Sprite characterImage;
+    private Dictionary<int, float> enemyLastAttackTimes = new Dictionary<int, float>();
+
+    private eCharacter characterType;
+    private Stat helathRegen;
+    private int projectileCount;
+    private Stat attackRange;
+
+    [SerializeField] Weapon[] denemeWeapons;
+    int deneme;
+
+    // UI bağlantısı
+    private UiManager uiManager;
+
+    void Awake()
+    {
+        InitPlayer(characterConfig);
+
+        // Sahnedeki UiManager'ı otomatik bul
+        uiManager = FindFirstObjectByType<UiManager>();
+        if (uiManager == null)
+            Debug.LogWarning("UiManager sahnede bulunamadı! HP güncellenmeyecek.");
+        else
+            uiManager.SetHealth(health, maxHealth);
+    }
+
+    void FixedUpdate()
+    {
+        if (rb == null) return;
+        PlayerMovment();
+        CheckGroundStatus();
+    }
+
+    void Update()
+    {
+        if (isGrounded)
+            coyoteTimeCounter = coyoteTime;
+        else
+            coyoteTimeCounter -= Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.G) && denemeWeapons[deneme] != null)
+        {
+            AddWeaponToInventory(denemeWeapons[deneme]);
+            deneme++;
+        }
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            if (weapons.Count > 0)
+                weapons[0].SetFiring(true, this);
+        }
+    }
+
+	
+
+	public void OnMove(InputValue value)
+    {
+        moveInput = value.Get<Vector2>();
+    }
+
+    public void OnJump(InputValue value)
+    {
+        if (value.isPressed && coyoteTimeCounter > 0f && Time.time > lastJumpTime + jumpCooldown)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            coyoteTimeCounter = 0f;
+            lastJumpTime = Time.time;
+        }
+    }
+
+    public void AddWeaponToInventory(Weapon weapon)
+    {
+        if (weapon == null) return;
+        weapons.Add(weapon);
+        weapon.SetFiring(true, this);
+        Debug.Log($"Yeni silah eklendi: {weapon.WeaponName}");
+    }
+
+    void InitPlayer(CharacterConfigSO characterConfig)
+    {
+        rb = GetComponent<Rigidbody>();
+        if (rb == null)
+            Debug.LogError("Rigidbody component not found on the player GameObject.");
+
+        if (characterConfig != null)
+        {
+            creatureName = characterConfig.CreatureName;
+            creatureType = characterConfig.CreatureType;
+
+            if (characterConfig.Model != null)
+            {
+                model = Instantiate(original: characterConfig.Model,
+                    position: playerModelObject.transform.position - Vector3.up,
+                    rotation: Quaternion.identity,
+                    parent: playerModelObject.transform);
+            }
+
+            animator = characterConfig.Animator;
+            hasGold = characterConfig.HasGold;
+            characterType = characterConfig.CharacterType;
+            characterImage = characterConfig.CharacterImage;
+            projectileCount = characterConfig.ProjectileCount;
+            maxHealth = characterConfig.MaxHealth;
+            health = maxHealth;
+            attackDamage = characterConfig.AttackDamage;
+            movementSpeed = characterConfig.MovementSpeed;
+            attackSpeed = characterConfig.AttackSpeed;
+            projectileScale = characterConfig.ProjectileScale;
+            collectionRange = characterConfig.CollectionRange;
+            chance = characterConfig.Chance;
+            attackRange = characterConfig.AttackRange;
+            helathRegen = characterConfig.HelathRegen;
+            RecalculateStats();
+        }
+        else
+        {
+            Debug.LogWarning($"{name}: CharacterConfigSO atanmamış, varsayılan değerlerle başlatılıyor.");
+
+            creatureName = "Default Adventurer";
+            creatureType = eCreatureType.Player;
+            animator = GetComponent<Animator>();
+            hasGold = 0;
+            characterType = eCharacter.Warrior;
+            projectileCount = 1;
+            maxHealth = 100f;
+            health = maxHealth;
+            attackDamage = new Stat(10f, 1f);
+            movementSpeed = new Stat(5f, 1f);
+            attackSpeed = new Stat(1f, 1f);
+            projectileScale = new Stat(1f, 1f);
+            collectionRange = new Stat(2f, 1f);
+            chance = new Stat(0.05f, 1f);
+            attackRange = new Stat(1.5f, 1f);
+            helathRegen = new Stat(0.5f, 1f);
+        }
+    }
+
+    public override void RecalculateStats()
+    {
+        attackDamage.Recalculate();
+        movementSpeed.Recalculate();
+        attackSpeed.Recalculate();
+        projectileScale.Recalculate();
+        collectionRange.Recalculate();
+        chance.Recalculate();
+        attackRange.Recalculate();
+        helathRegen.Recalculate();
+    }
+
+    void PlayerMovment()
+    {
+        Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0f, Camera.main.transform.forward.z).normalized;
+        Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0f, Camera.main.transform.right.z).normalized;
+
+        Vector3 inputDir = cameraForward * moveInput.y + cameraRight * moveInput.x;
+        Vector3 desiredVelocity = inputDir * movementSpeed.TotalValue;
+
+        Vector3 currentVel = rb.linearVelocity;
+        Vector3 velChange = desiredVelocity - new Vector3(currentVel.x, 0f, currentVel.z);
+        Vector3 force = velChange * acceleration;
+        rb.AddForce(force, ForceMode.Acceleration);
+        RotateModel(inputDir);
+    }
+
+    public void RotateModel(Vector3? dir = null, bool cameraRelativeIfNull = true)
+    {
+        Vector3 inputDir;
+
+        if (dir.HasValue)
+        {
+            inputDir = dir.Value;
+        }
+        else
+        {
+            Vector3 raw = new Vector3(moveInput.x, 0f, moveInput.y);
+            if (raw.sqrMagnitude < 0.0001f) return;
+
+            if (cameraRelativeIfNull && Camera.main != null)
+            {
+                Vector3 camF = Camera.main.transform.forward;
+                camF.y = 0f;
+                camF.Normalize();
+
+                Vector3 camR = Camera.main.transform.right;
+                camR.y = 0f;
+                camR.Normalize();
+
+                inputDir = camF * raw.z + camR * raw.x;
+            }
+            else
+            {
+                inputDir = raw;
+            }
+        }
+
+        inputDir.y = 0f;
+        if (inputDir.sqrMagnitude < 0.0001f) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(inputDir.normalized, Vector3.up);
+        model.transform.rotation = Quaternion.Slerp(
+            model.transform.rotation,
+            targetRotation,
+            Time.deltaTime * rotationSpeed
+        );
+    }
+
+    private void CheckGroundStatus()
+    {
+        isGrounded = Physics.CheckSphere(transform.position + groundCheckOffset, groundCheckRadius, groundLayer);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position + groundCheckOffset, groundCheckRadius);
+    }
+
+    public override void TakeDamage(float amount)
+    {
+        base.TakeDamage(amount);
+        Debug.Log($"Player health: {health}/{maxHealth}");
+
+        // Can UI'sini güncelle
+        if (uiManager != null)
+            uiManager.SetHealth(health, maxHealth);
+    }
+
+    public override void Die()
+    {
+        OnPlayerDied?.Invoke();
+
+        CameraController cameraController = Camera.main.GetComponent<CameraController>();
+        if (cameraController != null)
+            cameraController.OnPlayerDeath();
+
+        base.Die();
+        Debug.Log("GAME OVER");
+    }
+
+    public eCharacter CharacterType { get => characterType; set => characterType = value; }
+    public int HasGold { get => hasGold; set => hasGold = value; }
+    public int ProjectileCount { get => projectileCount; set => projectileCount = value; }
+    public Stat AttackRange { get => attackRange; set => attackRange = value; }
+    public Stat ProjectileScale { get => projectileScale; set => projectileScale = value; }
+    public Stat CollectionRange { get => collectionRange; set => collectionRange = value; }
+    public Stat HelathRegen { get => helathRegen; set => helathRegen = value; }
+    public Stat Chance { get => chance; set => chance = value; }
+}
+
+
+
+
+
+using UnityEngine;
+
+public class Projectile : MonoBehaviour
+{
+    private float damage;
+    private float range;
+    private Vector3 direction;
+    [SerializeField] private float speed = 10f;
+    private Vector3 startPos;
+
+    public void Initialize(float damage, float range, Vector3 dir)
+    {
+        this.damage = damage;
+        this.range = range;
+        this.direction = dir.normalized;
+        startPos = transform.position;
+    }
+
+    void Update()
+    {
+        transform.position += direction * speed * Time.deltaTime;
+
+        // Menzil kontrolü
+        if (Vector3.Distance(startPos, transform.position) >= range)
+            Destroy(gameObject);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Creature target = other.GetComponent<Creature>();
+        if (target != null)
+        {
+            target.TakeDamage(damage);
+            AudioManager.PlayShuriken(); // vurunca shuriken sesi çal
+            Destroy(gameObject);
+        }
+    }
+
+}
+
+
+
+
+using System.Collections;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "RangedWeapon", menuName = "new RangedWeapon")]
+public class RangedWeapon : Weapon
+{
+    [SerializeField] private GameObject explosionVFXPrefab;
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private bool isAreaOfEffect;
+    [SerializeField] private float projectileDelay = 0.1f;
+
+    private Player player;
+    private bool isFiring = false;
+    private Coroutine firingCoroutine;
+
+    // ScriptableObject her yüklendiğinde state'i sıfırla
+    private void OnEnable()
+    {
+        isFiring = false;
+        firingCoroutine = null;
+        player = null;
+    }
+
+    public override void SetFiring(bool firing, Player player)
+    {
+        if (this.player == null)
+            this.player = player;
+        
+        if (firing == isFiring && firingCoroutine != null) 
+        {
+            return;
+        }
+        
+        if (firingCoroutine != null && this.player != null)
+        {
+            this.player.StopCoroutine(firingCoroutine);
+            firingCoroutine = null;
+        }
+        
+        isFiring = firing;
+
+        if (isFiring && this.player != null)
+        {
+            firingCoroutine = this.player.StartCoroutine(FireLoop());
+        }
+    }
+
+    private IEnumerator FireLoop()
+    {
+        while (isFiring)
+        {
+            int enemyLayerMask = LayerMask.GetMask("Enemy");
+            float totalAttackRange = AttackRange.TotalValue + player.AttackRange.TotalValue;
+            Collider[] enemies = Physics.OverlapSphere(
+                player.transform.position,
+                totalAttackRange,
+                enemyLayerMask
+            );
+
+            if (enemies.Length == 0)
+            {
+                yield return new WaitForSeconds(0.1f);
+                continue;
+            }
+
+            int totalProjectiles = player.ProjectileCount;
+
+            if (totalProjectiles <= 0)
+            {
+                Debug.LogWarning("ProjectileCount 0 veya negatif!");
+                yield return new WaitForSeconds(0.1f);
+                continue;
+            }
+
+            for (int i = 0; i < totalProjectiles; i++)
+            {
+                if (isAreaOfEffect)
+                {
+                    Collider randomEnemy = GetRandomEnemy(enemies);
+                    if (randomEnemy != null)
+                    {
+                        float totalAreaRadius = Size.TotalValue + player.ProjectileScale.TotalValue;
+                        
+                        // Play VFX
+                        player.StartCoroutine(AnimateAreaOfEffect(randomEnemy.transform.position, totalAreaRadius));
+
+                        Collider[] hitEnemies = Physics.OverlapSphere(randomEnemy.transform.position, totalAreaRadius, enemyLayerMask);
+                        
+                        foreach (Collider col in hitEnemies)
+                        {
+                            Creature target = col.GetComponent<Creature>();
+                            if (target != null)
+                            {
+                                float totalDamage = player.AttackDamage.TotalValue + AttackDamage.TotalValue;
+                                target.TakeDamage(totalDamage);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Collider randomEnemy = GetRandomEnemy(enemies);
+                    if (randomEnemy != null)
+                    {
+                        if (projectilePrefab == null)
+                        {
+                            Debug.LogError("Projectile Prefab NULL! Inspector'dan atama yapın!");
+                            yield break;
+                        }
+
+                        Vector3 spawnPos = player.transform.position + Vector3.up;
+                        GameObject proj = GameObject.Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
+                        
+                        Projectile p = proj.GetComponent<Projectile>();
+                        if (p != null)
+                        {
+                            float totalDamage = player.AttackDamage.TotalValue + AttackDamage.TotalValue;
+                            Vector3 direction = (randomEnemy.transform.position - player.transform.position).normalized;
+                            p.Initialize(totalDamage, totalAttackRange, direction);
+                        }
+                        else
+                        {
+                            Debug.LogError($"Projectile component bulunamadı: {proj.name}");
+                        }
+                    }
+                }
+
+                yield return new WaitForSeconds(projectileDelay);
+            }
+
+            float totalAttackSpeed = player.AttackSpeed.TotalValue + AttackSpeed.TotalValue;
+            float waitTime = 1f / Mathf.Max(0.1f, totalAttackSpeed);
+            yield return new WaitForSeconds(waitTime);
+        }
+        
+    }
+
+    private IEnumerator AnimateAreaOfEffect(Vector3 position, float radius)
+{
+        // Eğer particle prefab atanmışsa onu kullan, yoksa eski fallback sphere
+        if (explosionVFXPrefab != null)
+        {
+            GameObject explosion = GameObject.Instantiate(explosionVFXPrefab, position, Quaternion.identity);
+
+            // Particle'ın scale'ini alan etkisine göre ayarlayalım
+            float targetScale = radius * 2f;
+            explosion.transform.localScale = Vector3.one * targetScale;
+
+            // Eğer particle sistem kendi süresine göre otomatik yok oluyorsa sorun yok,
+            // yoksa süresi bitince manuel olarak yok edelim:
+            ParticleSystem ps = explosion.GetComponent<ParticleSystem>();
+            if (ps != null)
+            {
+                yield return new WaitForSeconds(ps.main.duration);
+            }
+
+            GameObject.Destroy(explosion);
+        }
+        else
+        {
+            // fallback: eğer prefab yoksa eski turuncu sphere efektini kullan
+            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            sphere.transform.position = position;
+            sphere.transform.localScale = Vector3.zero;
+            sphere.GetComponent<Collider>().enabled = false;
+
+            Renderer sphereRenderer = sphere.GetComponent<Renderer>();
+            Material material = sphereRenderer.material;
+            Color originalColor = new Color(1f, 0.5f, 0f, 0.2f);
+            material.color = originalColor;
+            material.EnableKeyword("_EMISSION");
+            material.SetColor("_EmissionColor", originalColor);
+
+            float duration = 0.5f;
+            float timer = 0f;
+
+            while (timer < duration)
+            {
+                float progress = timer / duration;
+                sphere.transform.localScale = Vector3.one * Mathf.Lerp(0, radius * 2, progress);
+
+                Color newColor = originalColor;
+                newColor.a = Mathf.Lerp(originalColor.a, 0, progress);
+                material.color = newColor;
+                material.SetColor("_EmissionColor", newColor);
+
+                timer += Time.deltaTime;
+                yield return null;
+            }
+
+            GameObject.Destroy(sphere);
+        }
+    AudioManager.PlayExplosion();
+}
+
+    private Collider GetRandomEnemy(Collider[] enemies)
+    {
+        if (enemies == null || enemies.Length == 0)
+            return null;
+        
+        int randomIndex = Random.Range(0, enemies.Length);
+        return enemies[randomIndex];
+    }
+
+    private Collider GetClosestEnemy(Collider[] enemies, Vector3 position)
+    {
+        Collider closest = null;
+        float minDist = Mathf.Infinity;
+        
+        foreach (Collider col in enemies)
+        {
+            if (col == null) continue;
+            
+            float dist = Vector3.Distance(position, col.transform.position);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                closest = col;
+            }
+        }
+        
+        return closest;
+    }
+}
+
+
+
+
+using UnityEngine;
+
+public abstract class Weapon : ScriptableObject
+{
+    [SerializeField] private string weaponName;
+    [SerializeField] private Sprite resim;
+    [SerializeField] private Stat attackDamage;
+    [SerializeField] private Stat attackRange;
+    [SerializeField] private Stat size;
+    [SerializeField] private Stat attackSpeed;
+
+    public virtual void RecalculateStats()
+    {
+        attackDamage.Recalculate();
+        attackRange.Recalculate();
+        size.Recalculate();
+        attackSpeed.Recalculate();
+    }
+
+    public abstract void SetFiring(bool firing, Player player);
+    public string WeaponName { get => weaponName; set => weaponName = value; }
+    public Stat AttackRange { get => attackRange; set => attackRange = value; }
+    public Stat AttackDamage { get => attackDamage; set => attackDamage = value; }
+    public Stat Size { get => size; set => size = value; }
+    public Stat AttackSpeed { get => attackSpeed; set => attackSpeed = value; }
+    public Sprite Resim { get => resim; set => resim = value; }
+}
+
