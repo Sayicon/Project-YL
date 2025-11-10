@@ -73,7 +73,22 @@ Amaç, hem **Nesne Yönelimli Programlama (OOP)** hem de **Veri Odaklı Mimari (
 
 ---    
 
-### 🧩 4. Ekip Çalışması ve Versiyon Kontrolü (Git)    
+### ♻️ 4. Object Pooling Sistemi    
+
+- **Neden Object Pooling?**      
+  Oyun içinde sürekli olarak düşman yaratmak (`Instantiate`) ve yok etmek (`Destroy`) performans sorunlarına yol açar. Bu yüzden **Object Pooling** sistemi kullanılmıştır.    
+
+- **Nasıl Çalışıyor:**      
+  Oyun başında belirli sayıda düşman objesi oluşturulup, devre dışı bırakılarak bellekte tutulur. Yeni düşman gerektiğinde hazır olan bir obje etkinleştirilir. Düşman öldüğünde, `SetActive(false)` ile havuza geri gönderilir.    
+
+- **Avantajları:**      
+  - Garbage Collector yükünü azaltır.    
+  - FPS düşüşlerini önler.    
+  - Spawn/Despawn işlemleri çok daha hızlı gerçekleşir.    
+
+---    
+
+### 🧩 5. Ekip Çalışması ve Versiyon Kontrolü (Git)    
 
 - **Kullanılan Araçlar:**      
   - Git Bash (komut satırı)      
@@ -86,17 +101,6 @@ Amaç, hem **Nesne Yönelimli Programlama (OOP)** hem de **Veri Odaklı Mimari (
 - **Çalışma Akışı (Workflow):**    
   - Her ekip üyesi kendi `feature-branch` dalında geliştirme yaptı.      
   - Kodlar test edilip onaylandıktan sonra `main` dalına **Pull Request** ile birleştirildi.    
-
----    
-
-## 🧩 Sistem Şeması ve Oyun Mekaniği    
-
-### ⚙️ Sistem Mimarisi    
-
-**Character (GameObject)**      
-├── `CharacterHealth` (Script → `IDamageable` arayüzünü uygular)      
-├── `CharacterMovement` (Script)      
-└── `CharacterData` (ScriptableObject: Sağlık, hız, güç verilerini tutar)    
 
 ---    
 
@@ -116,7 +120,7 @@ flowchart TD
 
   %% --- GAME START ---    
   C --> E[Music Starts Playing]    
-  E --> F[Enemies Spawn Around Player]    
+  E --> F[Enemies Spawn via Object Pooling]    
   F --> G[Enemies Move Toward Player (rb.MovePosition)]    
   G --> H[If Wall → Jump with Force]    
   H --> I[Player Auto-Shoots & Kills Enemies]    
