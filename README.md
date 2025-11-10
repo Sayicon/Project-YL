@@ -111,28 +111,26 @@ ana menüden oyunu başlatma, düşmanlarla çatışma ve portalı bulma süreci
 
 ### 🧭 Oyun Akışı Diyagramı    
 
-```mermaid    
-flowchart TD    
-  %% --- MENU ---    
-  A[Main Menu] --> B{Select Option}    
-  B --> |Play| C[Game Starts]    
-  B --> |Quit| D[Exit Game]    
+```mermaid
+flowchart TD
+  %% --- MENU ---
+  A[Main Menu] --> B{Select Option}
+  B --> |Play| C[Game Starts]
+  B --> |Quit| D[Exit Game]
 
-  %% --- GAME START ---    
-  C --> E[Music Starts Playing]    
-  E --> F[Enemies Spawn via Object Pooling]    
-  F --> G[Enemies Move Toward Player (rb.MovePosition)]    
-  G --> H[If Wall → Jump with Force]    
-  H --> I[Player Auto-Shoots & Kills Enemies]    
-  I --> J[Search for Portal]    
-
-  %% --- PORTAL SEARCH LOOP ---    
-  J --> K{Portal Found?}    
-  K --> |Yes| L[Enter Portal → Level Complete]    
-  K --> |No| J    
-
-  %% --- OPTIONAL: PLAYER DEATH ---    
-  G --> M{Player Health = 0?}    
-  M --> |Yes| N[Player Dies → Game Over]    
-  M --> |No| H    
-```
+  %% --- GAME START ---
+  C --> E[Music Starts Playing]
+  E --> F[Enemies Spawn Around Player]
+  F --> G[Enemies Move Toward Player]
+  G --> H[Player Auto-Shoots & Kills Enemies]
+  H --> I[Search for Portal]
+  
+  %% --- PORTAL SEARCH LOOP ---
+  I --> J{Portal Found?}
+  J --> |Yes| K[Enter Portal → Level Complete]
+  J --> |No| I
+  
+  %% --- OPTIONAL: PLAYER DEATH ---
+  G --> L{Player Health = 0?}
+  L --> |Yes| M[Player Dies → Game Over]
+  L --> |No| H
