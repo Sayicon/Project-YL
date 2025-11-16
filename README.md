@@ -1,4 +1,4 @@
-# 🎮 Yapay Zeka Destekli TPS Oyunu    
+# 🎮 TPS Oyun | Megabonk Clone
 
 **Kocaeli Üniversitesi - Bilişim Sistemleri Mühendisliği**      
 **2025-2026 Güz Dönemi | Yazılım Geliştirme Laboratuvarı I Projesi**    
